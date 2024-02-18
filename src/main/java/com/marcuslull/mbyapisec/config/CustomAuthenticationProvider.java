@@ -6,13 +6,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -31,9 +27,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
         if (userDetails != null) {
             if (passwordEncoder.matches(password, userDetails.getPassword())) {
-                List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
-                // grantedAuthorityList.add(new SimpleGrantedAuthority(userDetails.getAuthorities().toString()));
-                return new UsernamePasswordAuthenticationToken(email, password, grantedAuthorityList);
+                return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
             }
             else throw new BadCredentialsException("Invalid Password!");
         }
