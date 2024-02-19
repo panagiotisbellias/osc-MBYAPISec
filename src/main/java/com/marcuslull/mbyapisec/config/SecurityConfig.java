@@ -1,6 +1,5 @@
 package com.marcuslull.mbyapisec.config;
 
-import com.marcuslull.mbyapisec.service.JwtRoleFilter;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -37,7 +36,8 @@ public class SecurityConfig {
         return httpSecurity
                 .addFilterBefore(jwtRoleFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable) // this is ok with stateless
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/users").hasAnyAuthority("SCOPE_ADMIN")
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())) // jwt resources
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // never create a session
                 .httpBasic(Customizer.withDefaults())
