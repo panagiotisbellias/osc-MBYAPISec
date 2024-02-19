@@ -36,7 +36,9 @@ public class SecurityConfig {
         return httpSecurity
                 .addFilterBefore(jwtRoleFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable) // this is ok with stateless
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/users").hasAnyAuthority("SCOPE_ADMIN")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/api/users").hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())) // jwt resources
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // never create a session
