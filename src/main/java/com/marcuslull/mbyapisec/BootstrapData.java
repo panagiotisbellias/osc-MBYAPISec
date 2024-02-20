@@ -1,4 +1,4 @@
-package com.marcuslull.mbyapisec.config;
+package com.marcuslull.mbyapisec;
 
 import com.marcuslull.mbyapisec.model.Animal;
 import com.marcuslull.mbyapisec.model.Plant;

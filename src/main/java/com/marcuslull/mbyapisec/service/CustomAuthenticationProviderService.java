@@ -1,4 +1,4 @@
-package com.marcuslull.mbyapisec.config;
+package com.marcuslull.mbyapisec.service;
 
 import com.marcuslull.mbyapisec.service.CustomUserDetailsService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,11 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomAuthenticationProvider implements AuthenticationProvider {
+public class CustomAuthenticationProviderService implements AuthenticationProvider {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public CustomAuthenticationProvider(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
+    public CustomAuthenticationProviderService(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
         this.customUserDetailsService = customUserDetailsService;
         this.passwordEncoder = passwordEncoder;
     }

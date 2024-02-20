@@ -1,5 +1,7 @@
 package com.marcuslull.mbyapisec.config;
 
+import com.marcuslull.mbyapisec.filter.JwtRoleFilter;
+import com.marcuslull.mbyapisec.model.record.RsaKeyProperties;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

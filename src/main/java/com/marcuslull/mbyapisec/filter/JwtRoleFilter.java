@@ -1,4 +1,4 @@
-package com.marcuslull.mbyapisec.config;
+package com.marcuslull.mbyapisec.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,15 +29,15 @@ public class JwtRoleFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        // we need an Authentication object for every connection to check roles and authorizations
+        // we need to get the roles from the token to set the authorities for the user
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
+            token = token.substring(7); // remove "Bearer " from the token
             Jwt jwt = jwtDecoder.decode(token);
             String email = jwt.getSubject();
-            List<String> roles = jwt.getClaimAsStringList("scope");
+            List<String> roles = jwt.getClaimAsStringList("scope"); // authorities
             List<GrantedAuthority> authorities = roles.stream()
-                    .map(role -> new SimpleGrantedAuthority(role))
+                    .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
             return new UsernamePasswordAuthenticationToken(email, null, authorities);
         }
