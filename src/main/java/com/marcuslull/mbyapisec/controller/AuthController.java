@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthController {
-    // JWT work from: https://www.danvega.dev/blog/spring-security-jwt
     private final TokenService tokenService;
-
     public AuthController(TokenService tokenService) {
         this.tokenService = tokenService;
     }

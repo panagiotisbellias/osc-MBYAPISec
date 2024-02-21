@@ -1,6 +1,5 @@
 package com.marcuslull.mbyapisec.config;
 
-import com.marcuslull.mbyapisec.filter.JwtRoleFilter;
 import com.marcuslull.mbyapisec.model.record.RsaKeyProperties;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -21,11 +20,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
-    // JWT work from: https://www.danvega.dev/blog/spring-security-jwt
     private final RsaKeyProperties rsaKeyProperties;
 
     public SecurityConfig(RsaKeyProperties rsaKeyProperties) {
@@ -34,13 +31,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        JwtRoleFilter jwtRoleFilter = new JwtRoleFilter(jwtDecoder());
         return httpSecurity
-                .addFilterBefore(jwtRoleFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable) // this is ok with stateless
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register").permitAll()
-                        .requestMatchers("/api/users").hasAnyAuthority("SCOPE_ADMIN")
+                        .requestMatchers("/api/users").hasAuthority("SCOPE_ADMIN") // need to append "SCOPE_" to the role as it is added by Springs JWTAuthenticationProvider
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())) // jwt resources
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // never create a session

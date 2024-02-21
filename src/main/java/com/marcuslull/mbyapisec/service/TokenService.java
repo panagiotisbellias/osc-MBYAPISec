@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
-    // JWT work from: https://www.danvega.dev/blog/spring-security-jwt
-
     private final JwtEncoder jwtEncoder;
 
     public TokenService(JwtEncoder jwtEncoder) {
@@ -28,9 +26,9 @@ public class TokenService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("self")
+                .issuer("https://marcuslull.com")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.DAYS))
+                .expiresAt(now.plus(3, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
