@@ -4,5 +4,4 @@ import com.marcuslull.mbyapisec.model.Yard;
 import org.springframework.data.repository.CrudRepository;
 
 public interface YardRepository extends CrudRepository<Yard, Long> {
-    Yard findYardByName(String name);
 }
