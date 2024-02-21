@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CustomAuthenticationProviderService implements AuthenticationProvider {
-    private final CustomUserDetailsService customUserDetailsService;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    public CustomAuthenticationProviderService(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
-        this.customUserDetailsService = customUserDetailsService;
+    public CustomAuthenticationProviderService(UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -23,7 +23,7 @@ public class CustomAuthenticationProviderService implements AuthenticationProvid
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+        UserDetails userDetails = userService.loadUserByUsername(email);
         if (userDetails != null) {
             if (passwordEncoder.matches(password, userDetails.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
