@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,9 +28,12 @@ public class TokenService {
                 .collect(Collectors.toList());
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("https://marcuslull.com")
+                .subject(authentication.getName())
+                .audience(List.of("mby_client_applications"))
+                .notBefore(now)
                 .issuedAt(now)
                 .expiresAt(now.plus(3, ChronoUnit.HOURS))
-                .subject(authentication.getName())
+                .id(UUID.randomUUID().toString())
                 .claim("scope", scope)
                 .build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();

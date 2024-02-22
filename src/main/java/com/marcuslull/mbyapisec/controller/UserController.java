@@ -6,9 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 public class UserController {
     private final UserRepository userRepository;
@@ -18,9 +15,7 @@ public class UserController {
     }
 
     @GetMapping("/api/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Iterable<User>> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
     }
 }

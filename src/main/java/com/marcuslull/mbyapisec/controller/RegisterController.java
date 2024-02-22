@@ -23,6 +23,5 @@ public class RegisterController {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Email already exists",  HttpStatus.CONFLICT);
-
     }
 }

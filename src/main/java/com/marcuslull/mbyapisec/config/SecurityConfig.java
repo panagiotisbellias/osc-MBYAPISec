@@ -34,7 +34,7 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable) // this is ok with stateless
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/register", "/token").permitAll()
                         .requestMatchers("/api/users").hasAuthority("SCOPE_ADMIN") // need to append "SCOPE_" to the role as it is added by Springs JWTAuthenticationProvider
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())) // jwt resources
