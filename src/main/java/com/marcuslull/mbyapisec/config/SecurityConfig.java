@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -37,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/register", "/token").permitAll()
                         .requestMatchers("/api/users").hasAuthority("SCOPE_ADMIN") // need to append "SCOPE_" to the role as it is added by Springs JWTAuthenticationProvider
                         .anyRequest().authenticated())
+                .addFilterBefore(new CustomFilter(), UsernamePasswordAuthenticationFilter.class)
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())) // jwt resources
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // never create a session
                 .httpBasic(Customizer.withDefaults())
