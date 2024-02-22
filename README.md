@@ -28,6 +28,7 @@ will allow for growth both in scope and demand.
 This iteration of My Backyard will have a full implementation of Spring security using JWT for authentication replacing 
 the API key authentication in the previous version.  
 It currently uses a custom authentication provider and security config to issue JWT for API access. The JWTs utilize a self signed public/private key implementation for authenticity.
-A basic implementation of authorization roles is also present to separate admin access from user access.
+A basic implementation of authorization roles is also present to separate admin access from user access as well as 
+method level security for returning user data.
 
 This project is currently under development!
