@@ -48,7 +48,7 @@ public class MapperService {
             yardDto.setYardSubType(yard.getYardSubType());
             yardDto.setPlantIds(yard.getPlants().stream().map(Plant::getId).collect(Collectors.toList()));
             yardDto.setAnimalIds(yard.getAnimals().stream().map(Animal::getId).collect(Collectors.toList()));
-            yardDto.setUserId(yard.getUser().getId());
+            yardDto.setUserEmail(yard.getUser().getEmail());
             return yardDto;
         } else {
             YardDto yardDto = (YardDto) source;
@@ -67,7 +67,7 @@ public class MapperService {
                 yard.setAnimals(yardDto.getAnimalIds().stream().map(animal -> animalRepository.findById(animal)
                         .get()).collect(Collectors.toList()));
             }
-            yard.setUser(userRepository.findById(yardDto.getUserId()).get());
+            yard.setUser(userRepository.findUserByEmail(yardDto.getUserEmail()));
             return yard;
         }
     }

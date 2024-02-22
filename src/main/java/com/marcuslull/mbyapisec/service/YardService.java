@@ -3,6 +3,7 @@ package com.marcuslull.mbyapisec.service;
 import com.marcuslull.mbyapisec.model.dto.YardDto;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import com.marcuslull.mbyapisec.repository.YardRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class YardService {
 
     public List<YardDto> getYards() {
         List<YardDto> yardDtos = new ArrayList<>();
-        yardRepository.findAll().forEach(yard -> {
-            YardDto yardDto = mapperService.map(yard);
+        yardRepository.findYardsByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+                .forEach(yard -> {YardDto yardDto = mapperService.map(yard);
             yardDtos.add(yardDto);
         });
         return yardDtos;
