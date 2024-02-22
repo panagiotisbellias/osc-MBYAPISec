@@ -1,9 +1,9 @@
 package com.marcuslull.mbyapisec;
 
-import com.marcuslull.mbyapisec.model.Animal;
-import com.marcuslull.mbyapisec.model.Plant;
-import com.marcuslull.mbyapisec.model.User;
-import com.marcuslull.mbyapisec.model.Yard;
+import com.marcuslull.mbyapisec.model.entity.Animal;
+import com.marcuslull.mbyapisec.model.entity.Plant;
+import com.marcuslull.mbyapisec.model.entity.User;
+import com.marcuslull.mbyapisec.model.entity.Yard;
 import com.marcuslull.mbyapisec.model.enums.*;
 import com.marcuslull.mbyapisec.repository.AnimalRepository;
 import com.marcuslull.mbyapisec.repository.PlantRepository;

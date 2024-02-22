@@ -1,7 +1,5 @@
-package com.marcuslull.mbyapisec.model;
+package com.marcuslull.mbyapisec.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // prevents infinite recursion
 @NoArgsConstructor
 @Getter
 @Setter
@@ -50,7 +47,7 @@ public class User implements UserDetails {
     @CollectionTable(name = "users_grantedAuthority", joinColumns = @JoinColumn(name = "owner_id"))
     private List<GrantedAuthority> grantedAuthority = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Yard> yards = new ArrayList<>();
 
     @Override

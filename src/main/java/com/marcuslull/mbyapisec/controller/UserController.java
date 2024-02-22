@@ -1,6 +1,6 @@
 package com.marcuslull.mbyapisec.controller;
 
-import com.marcuslull.mbyapisec.model.User;
+import com.marcuslull.mbyapisec.model.entity.User;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

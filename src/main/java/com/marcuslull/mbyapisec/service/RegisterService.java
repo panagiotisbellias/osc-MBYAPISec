@@ -1,6 +1,6 @@
 package com.marcuslull.mbyapisec.service;
 
-import com.marcuslull.mbyapisec.model.User;
+import com.marcuslull.mbyapisec.model.entity.User;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

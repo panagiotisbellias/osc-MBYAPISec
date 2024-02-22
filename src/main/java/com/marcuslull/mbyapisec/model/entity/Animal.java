@@ -1,6 +1,8 @@
-package com.marcuslull.mbyapisec.model;
+package com.marcuslull.mbyapisec.model.entity;
 
-import com.marcuslull.mbyapisec.model.enums.*;
+import com.marcuslull.mbyapisec.model.enums.AnimalSubType;
+import com.marcuslull.mbyapisec.model.enums.DietType;
+import com.marcuslull.mbyapisec.model.enums.NativeAreaType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +16,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "plant")
-public class Plant {
+@Table(name = "animal")
+public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -33,28 +35,16 @@ public class Plant {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "hardiness_zone", nullable = false)
-    private HardinessZone hardinessZone;
+    @Column(name = "animal_sub_type", nullable = false)
+    private AnimalSubType animalSubType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "diet_type", nullable = false)
+    private DietType dietType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "native_area_type", nullable = false)
     private NativeAreaType nativeAreaType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "plant_sub_type", nullable = false)
-    private PlantSubType plantSubType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "soil_type", nullable = false)
-    private SoilType soilType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "sun_exposure", nullable = false)
-    private SunExposure sunExposure;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "watering_frequency", nullable = false)
-    private WateringFrequency wateringFrequency;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "yard_id")
