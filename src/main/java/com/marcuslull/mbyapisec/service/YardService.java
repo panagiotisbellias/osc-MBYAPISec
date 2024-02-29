@@ -31,6 +31,7 @@ public class YardService {
     }
 
     public YardDto postYard(YardDto yardDto) {
+        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
     }
 }
