@@ -3,10 +3,7 @@ package com.marcuslull.mbyapisec.controller;
 import com.marcuslull.mbyapisec.model.dto.YardDto;
 import com.marcuslull.mbyapisec.service.YardService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,8 +20,23 @@ public class YardController {
         return ResponseEntity.ok(yardService.getYards());
     }
 
+    @GetMapping("/api/yard/{id}")
+    public ResponseEntity<YardDto> getYard(@PathVariable String id) {
+        YardDto yardDto = yardService.getYard(Long.valueOf(id));
+        if (yardDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(yardDto);
+    }
+
     @PostMapping("/api/yards")
     public ResponseEntity<YardDto> postYards(@RequestBody YardDto yardDto) {
         return ResponseEntity.ok(yardService.postYard(yardDto));
+    }
+
+    @DeleteMapping("/api/yard/{id}")
+    public ResponseEntity<String> deleteYard(@PathVariable String id) {
+        yardService.deleteYard(Long.valueOf(id));
+        return ResponseEntity.noContent().build();
     }
 }

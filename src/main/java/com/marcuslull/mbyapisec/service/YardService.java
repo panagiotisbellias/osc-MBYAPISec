@@ -1,22 +1,21 @@
 package com.marcuslull.mbyapisec.service;
 
 import com.marcuslull.mbyapisec.model.dto.YardDto;
-import com.marcuslull.mbyapisec.repository.UserRepository;
+import com.marcuslull.mbyapisec.model.entity.Yard;
 import com.marcuslull.mbyapisec.repository.YardRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class YardService {
-    private final UserRepository userRepository;
     private final YardRepository yardRepository;
     private final MapperService mapperService;
 
-    public YardService(UserRepository userRepository, YardRepository yardRepository, MapperService mapperService) {
-        this.userRepository = userRepository;
+    public YardService(YardRepository yardRepository, MapperService mapperService) {
         this.yardRepository = yardRepository;
         this.mapperService = mapperService;
     }
@@ -33,5 +32,18 @@ public class YardService {
     public YardDto postYard(YardDto yardDto) {
         yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
+    }
+
+    public YardDto getYard(Long id) {
+        Yard yard = yardRepository.findYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        if (yard != null) {
+            return mapperService.map(yard);
+        }
+        return null;
+    }
+
+    @Transactional
+    public void deleteYard(Long id) {
+        yardRepository.deleteYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }
