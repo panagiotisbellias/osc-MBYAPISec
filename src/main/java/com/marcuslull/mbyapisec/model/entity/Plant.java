@@ -29,31 +29,34 @@ public class Plant {
     @UpdateTimestamp
     private LocalDateTime updated;
 
+    @Column(name = "owner", nullable = false)
+    private String owner;
+
     @Column(name = "name", nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "hardiness_zone", nullable = false)
+    @Column(name = "hardiness_zone")
     private HardinessZone hardinessZone;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "native_area_type", nullable = false)
+    @Column(name = "native_area_type")
     private NativeAreaType nativeAreaType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "plant_sub_type", nullable = false)
+    @Column(name = "plant_sub_type")
     private PlantSubType plantSubType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "soil_type", nullable = false)
+    @Column(name = "soil_type")
     private SoilType soilType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sun_exposure", nullable = false)
+    @Column(name = "sun_exposure")
     private SunExposure sunExposure;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "watering_frequency", nullable = false)
+    @Column(name = "watering_frequency")
     private WateringFrequency wateringFrequency;
 
     @ManyToOne(fetch = FetchType.LAZY)

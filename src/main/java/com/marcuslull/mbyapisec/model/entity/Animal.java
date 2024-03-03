@@ -31,6 +31,9 @@ public class Animal {
     @UpdateTimestamp
     private LocalDateTime updated;
 
+    @Column(name = "owner", nullable = false)
+    private String owner;
+
     @Column(name = "name", nullable = false)
     private String name;
 
