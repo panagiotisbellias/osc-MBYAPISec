@@ -56,6 +56,7 @@ public class BootstrapData implements CommandLineRunner {
         yard.setUser(user);
 
         Plant plant = new Plant();
+        plant.setOwner("user@email.com");
         plant.setName("Rose");
         plant.setHardinessZone(HardinessZone.ZONE_6);
         plant.setPlantSubType(PlantSubType.FLOWER);
@@ -66,6 +67,7 @@ public class BootstrapData implements CommandLineRunner {
         plant.setYard(yard);
 
         Animal animal = new Animal();
+        animal.setOwner("user@email.com");
         animal.setName("Dog");
         animal.setAnimalSubType(AnimalSubType.MAMMAL);
         animal.setDietType(DietType.OMNIVORE);

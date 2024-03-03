@@ -1,5 +1,7 @@
 package com.marcuslull.mbyapisec.service;
 
+import com.marcuslull.mbyapisec.model.dto.AnimalDto;
+import com.marcuslull.mbyapisec.model.dto.PlantDto;
 import com.marcuslull.mbyapisec.model.dto.YardDto;
 import com.marcuslull.mbyapisec.model.entity.Animal;
 import com.marcuslull.mbyapisec.model.entity.Plant;
@@ -8,6 +10,7 @@ import com.marcuslull.mbyapisec.repository.AnimalRepository;
 import com.marcuslull.mbyapisec.repository.PlantRepository;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import com.marcuslull.mbyapisec.repository.YardRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -31,10 +34,80 @@ public class MapperService {
 
         return switch (source.getClass().getSimpleName()) {
             case "Yard", "YardDto" -> (T) mapYard(source);
-            //case "Plant", "PlantDto" -> (T) mapPlant(source);
-            //case "Animal", "AnimalDto" -> (T) mapAnimal(source);
+            case "Plant", "PlantDto" -> (T) mapPlant(source);
+            case "Animal", "AnimalDto" -> (T) mapAnimal(source);
             default -> null;
         };
+    }
+
+    private Object mapAnimal(Object source) {
+        if (source instanceof Animal animal) {
+            AnimalDto animalDto = new AnimalDto();
+            animalDto.setId(animal.getId());
+            animalDto.setCreated(animal.getCreated());
+            animalDto.setUpdated(animal.getUpdated());
+            animalDto.setOwner(animal.getOwner());
+            animalDto.setName(animal.getName());
+            animalDto.setAnimalSubType(animal.getAnimalSubType());
+            animalDto.setDietType(animal.getDietType());
+            animalDto.setNativeAreaType(animal.getNativeAreaType());
+            animalDto.setYardId(animal.getYard().getId());
+            return animalDto;
+        } else {
+            AnimalDto animalDto = (AnimalDto) source;
+            Animal animal = new Animal();
+            animal.setId(animalDto.getId());
+            animal.setCreated(animalDto.getCreated());
+            animal.setUpdated(animalDto.getUpdated());
+            animal.setOwner(animalDto.getOwner());
+            animal.setName(animalDto.getName());
+            animal.setAnimalSubType(animalDto.getAnimalSubType());
+            animal.setDietType(animalDto.getDietType());
+            animal.setNativeAreaType(animalDto.getNativeAreaType());
+            if (animalDto.getYardId() != null) {
+                animal.setYard(yardRepository.findYardByIdAndUserEmail(animalDto.getYardId(),
+                        SecurityContextHolder.getContext().getAuthentication().getName()));
+            }
+            return animal;
+        }
+    }
+
+    private Object mapPlant(Object source) {
+        if (source instanceof Plant plant) {
+            PlantDto plantDto = new PlantDto();
+            plantDto.setId(plant.getId());
+            plantDto.setCreated(plant.getCreated());
+            plantDto.setUpdated(plant.getUpdated());
+            plantDto.setOwner(plant.getOwner());
+            plantDto.setName(plant.getName());
+            plantDto.setHardinessZone(plant.getHardinessZone());
+            plantDto.setNativeAreaType(plant.getNativeAreaType());
+            plantDto.setPlantSubType(plant.getPlantSubType());
+            plantDto.setSoilType(plant.getSoilType());
+            plantDto.setSunExposure(plant.getSunExposure());
+            plantDto.setWateringFrequency(plant.getWateringFrequency());
+            plantDto.setYardId(plant.getYard().getId());
+            return plantDto;
+        } else {
+            PlantDto plantDto = (PlantDto) source;
+            Plant plant = new Plant();
+            plant.setId(plantDto.getId());
+            plant.setCreated(plantDto.getCreated());
+            plant.setUpdated(plantDto.getUpdated());
+            plant.setOwner(plantDto.getOwner());
+            plant.setName(plantDto.getName());
+            plant.setHardinessZone(plantDto.getHardinessZone());
+            plant.setNativeAreaType(plantDto.getNativeAreaType());
+            plant.setPlantSubType(plantDto.getPlantSubType());
+            plant.setSoilType(plantDto.getSoilType());
+            plant.setSunExposure(plantDto.getSunExposure());
+            plant.setWateringFrequency(plantDto.getWateringFrequency());
+            if (plantDto.getYardId() != null) {
+                plant.setYard(yardRepository.findYardByIdAndUserEmail(plantDto.getYardId(),
+                        SecurityContextHolder.getContext().getAuthentication().getName()));
+            }
+            return plant;
+        }
     }
 
     private Object mapYard(Object source) {

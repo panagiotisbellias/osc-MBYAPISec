@@ -1,11 +1,9 @@
 package com.marcuslull.mbyapisec.model.dto;
 
-import com.marcuslull.mbyapisec.model.entity.Plant;
 import com.marcuslull.mbyapisec.model.enums.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
