@@ -23,7 +23,8 @@ public class PlantService {
     public List<PlantDto> getPlants() {
         List<PlantDto> plantDtos = new ArrayList<>();
         plantRepository.findPlantsByOwner(SecurityContextHolder.getContext().getAuthentication().getName())
-                .forEach(plant -> {PlantDto plantDto = mapperService.map(plant);
+                .forEach(plant -> {
+                    PlantDto plantDto = mapperService.map(plant);
                     plantDtos.add(plantDto);
                 });
         return plantDtos;

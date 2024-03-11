@@ -22,6 +22,6 @@ public class RegisterController {
         if (registerService.register(registrationInfo)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("Email already exists",  HttpStatus.CONFLICT);
+        return new ResponseEntity<>("Email already exists", HttpStatus.CONFLICT);
     }
 }
