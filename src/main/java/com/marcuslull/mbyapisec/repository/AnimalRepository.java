@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface AnimalRepository extends CrudRepository<Animal, Long> {
     @PreAuthorize("#email == authentication.name")
-    public List<Animal> findAnimalsByOwner(String email);
+    List<Animal> findAnimalsByOwner(String email);
 
     @PreAuthorize("#email == authentication.name")
-    public Animal findAnimalByIdAndOwner(Long id, String email);
+    Animal findAnimalByIdAndOwner(Long id, String email);
 
     @PreAuthorize("#email == authentication.name")
-    public void deleteAnimalByIdAndOwner(Long id, String email);
+    void deleteAnimalByIdAndOwner(Long id, String email);
 }

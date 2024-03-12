@@ -23,9 +23,10 @@ public class YardService {
     public List<YardDto> getYards() {
         List<YardDto> yardDtos = new ArrayList<>();
         yardRepository.findYardsByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                .forEach(yard -> {YardDto yardDto = mapperService.map(yard);
-            yardDtos.add(yardDto);
-        });
+                .forEach(yard -> {
+                    YardDto yardDto = mapperService.map(yard);
+                    yardDtos.add(yardDto);
+                });
         return yardDtos;
     }
 

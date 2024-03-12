@@ -27,10 +27,8 @@ public class CustomAuthenticationProviderService implements AuthenticationProvid
         if (userDetails != null) {
             if (passwordEncoder.matches(password, userDetails.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
-            }
-            else throw new BadCredentialsException("Invalid Password!");
-        }
-        else throw new BadCredentialsException("Invalid email!");
+            } else throw new BadCredentialsException("Invalid Password!");
+        } else throw new BadCredentialsException("Invalid email!");
     }
 
     @Override

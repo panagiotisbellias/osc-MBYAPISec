@@ -23,7 +23,8 @@ public class AnimalService {
     public List<AnimalDto> getAnimals() {
         List<AnimalDto> animalDtos = new ArrayList<>();
         animalRepository.findAnimalsByOwner(SecurityContextHolder.getContext().getAuthentication().getName())
-                .forEach(animal -> {AnimalDto animalDto = mapperService.map(animal);
+                .forEach(animal -> {
+                    AnimalDto animalDto = mapperService.map(animal);
                     animalDtos.add(animalDto);
                 });
         return animalDtos;
