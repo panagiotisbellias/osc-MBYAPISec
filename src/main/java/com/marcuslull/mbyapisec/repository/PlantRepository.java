@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface PlantRepository extends CrudRepository<Plant, Long> {
     @PreAuthorize("#email == authentication.name")
-    public List<Plant> findPlantsByOwner(String email);
+    List<Plant> findPlantsByOwner(String email);
 
     @PreAuthorize("#email == authentication.name")
-    public Plant findPlantByIdAndOwner(Long id, String email);
+    Plant findPlantByIdAndOwner(Long id, String email);
 
     @PreAuthorize("#email == authentication.name")
-    public void deletePlantByIdAndOwner(Long id, String email);
+    void deletePlantByIdAndOwner(Long id, String email);
 }
