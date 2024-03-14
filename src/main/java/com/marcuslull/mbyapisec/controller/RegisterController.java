@@ -19,9 +19,11 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> registrationInfo) {
-        if (registerService.register(registrationInfo)) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Email already exists", HttpStatus.CONFLICT);
+        // This is disabled until I get some email verification
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        if (registerService.register(registrationInfo)) {
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        }
+//        return new ResponseEntity<>("Email already exists", HttpStatus.CONFLICT);
     }
 }
