@@ -47,7 +47,8 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
 //                        config.setAllowedOrigins(List.of("http://localhost:4200"));
-                        config.setAllowedOrigins(List.of(System.getenv("ALLOWED_ORIGIN")));
+//                        config.setAllowedOrigins(List.of(System.getenv("ALLOWED_ORIGIN")));
+                        config.setAllowedOriginPatterns(List.of("*"));
                         config.setAllowedMethods(List.of("*"));
                         config.setAllowedHeaders(List.of("*"));
                         config.setAllowCredentials(true);
