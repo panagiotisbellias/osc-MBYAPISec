@@ -31,4 +31,4 @@ It currently uses a custom authentication provider and security config to issue 
 A basic implementation of authorization roles is also present to separate admin access from user access as well as 
 method level security for returning user data.
 
-This project is currently under development!
+This project is currently under development!!
