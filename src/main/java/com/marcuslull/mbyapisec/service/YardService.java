@@ -30,15 +30,26 @@ public class YardService {
         return yardDtos;
     }
 
+    public YardDto getYard(Long id) {
+        Yard yard = yardRepository.findYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        if (yard != null) {
+            return mapperService.map(yard);
+        }
+        return null;
+    }
+
     public YardDto postYard(YardDto yardDto) {
         yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
     }
 
-    public YardDto getYard(Long id) {
-        Yard yard = yardRepository.findYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+    public YardDto putYard(String id, YardDto yardDto) {
+        yardDto.setId(Long.valueOf(id));
+        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Yard yard = yardRepository.findYardByIdAndUserEmail(yardDto.getId(), yardDto.getUserEmail());
         if (yard != null) {
-            return mapperService.map(yard);
+            yardDto.setCreated(yard.getCreated());
+            return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
         }
         return null;
     }

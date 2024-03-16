@@ -34,6 +34,15 @@ public class YardController {
         return ResponseEntity.ok(yardService.postYard(yardDto));
     }
 
+    @PutMapping("/api/yard/{id}")
+    public ResponseEntity<YardDto> putYard(@PathVariable String id, @RequestBody YardDto yardDto) {
+        YardDto returnedYard = yardService.putYard(id, yardDto);
+        if (returnedYard != null) {
+            return ResponseEntity.ok(returnedYard);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/api/yard/{id}")
     public ResponseEntity<String> deleteYard(@PathVariable String id) {
         yardService.deleteYard(Long.valueOf(id));

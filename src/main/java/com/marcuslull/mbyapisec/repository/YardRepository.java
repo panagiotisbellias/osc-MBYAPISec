@@ -15,4 +15,7 @@ public interface YardRepository extends CrudRepository<Yard, Long> {
 
     @PreAuthorize("#email == authentication.name")
     void deleteYardByIdAndUserEmail(Long id, String email);
+
+    @PreAuthorize("#email == authentication.name")
+    boolean existsByIdAndUserEmail(Long id, String email);
 }
