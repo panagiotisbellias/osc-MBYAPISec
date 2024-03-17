@@ -22,5 +22,6 @@ public class YardDto implements Serializable {
     private YardSubType yardSubType;
     private List<Long> plantIds;
     private List<Long> animalIds;
+    private List<Long> noteIds;
     private String userEmail;
 }

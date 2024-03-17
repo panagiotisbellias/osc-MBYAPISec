@@ -17,5 +17,4 @@ public class NoteDto implements Serializable {
     private String owner;
     private String comment;
     private Long yardId;
-
 }
