@@ -49,6 +49,18 @@ public class YardService {
         Yard yard = yardRepository.findYardByIdAndUserEmail(yardDto.getId(), yardDto.getUserEmail());
         if (yard != null) {
             yardDto.setCreated(yard.getCreated());
+            List<Long> plants = new ArrayList<>();
+            yard.getPlants().forEach(plant -> plants.add(plant.getId()));
+            yardDto.setPlantIds(plants);
+
+            List<Long> animals = new ArrayList<>();
+            yard.getAnimals().forEach(animal -> animals.add(animal.getId()));
+            yardDto.setAnimalIds(animals);
+
+            List<Long> notes = new ArrayList<>();
+            yard.getNotes().forEach(note -> notes.add(note.getId()));
+            yardDto.setNoteIds(notes);
+
             return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
         }
         return null;
@@ -56,6 +68,8 @@ public class YardService {
 
     @Transactional
     public void deleteYard(Long id) {
-        yardRepository.deleteYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        if (yardRepository.existsById(id)) {
+            yardRepository.deleteYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        }
     }
 }

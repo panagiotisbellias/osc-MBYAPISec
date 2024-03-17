@@ -10,4 +10,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
     @PreAuthorize("#email == authentication.name")
     Note findNoteByOwnerAndId(String email, Long noteId);
+
+    @PreAuthorize("#email == authentication.name")
+    void deleteNoteByIdAndOwner(Long NoteId, String email);
 }

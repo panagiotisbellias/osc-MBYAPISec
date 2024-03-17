@@ -33,4 +33,19 @@ public class NoteController {
     public ResponseEntity<NoteDto> postNote(@RequestBody NoteDto noteDto) {
         return ResponseEntity.ok(noteService.postNote(noteDto));
     }
+
+    @PutMapping("/api/note/{id}")
+    public ResponseEntity<NoteDto> putNote(@PathVariable String id, @RequestBody NoteDto noteDto) {
+        NoteDto returnedNoteDto = noteService.putNote(id, noteDto);
+        if (returnedNoteDto == null) {
+            ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(returnedNoteDto);
+    }
+
+    @DeleteMapping("/api/note/{id}")
+    public ResponseEntity<String> deleteNote(@PathVariable String id) {
+        noteService.deleteNote(id);
+        return ResponseEntity.noContent().build();
+    }
 }
