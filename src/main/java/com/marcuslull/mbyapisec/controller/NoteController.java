@@ -1,0 +1,13 @@
+package com.marcuslull.mbyapisec.controller;
+
+import com.marcuslull.mbyapisec.service.NoteService;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class NoteController {
+    private final NoteService noteService;
+
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
+    }
+}
