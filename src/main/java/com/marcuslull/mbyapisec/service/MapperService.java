@@ -1,9 +1,11 @@
 package com.marcuslull.mbyapisec.service;
 
 import com.marcuslull.mbyapisec.model.dto.AnimalDto;
+import com.marcuslull.mbyapisec.model.dto.NoteDto;
 import com.marcuslull.mbyapisec.model.dto.PlantDto;
 import com.marcuslull.mbyapisec.model.dto.YardDto;
 import com.marcuslull.mbyapisec.model.entity.Animal;
+import com.marcuslull.mbyapisec.model.entity.Note;
 import com.marcuslull.mbyapisec.model.entity.Plant;
 import com.marcuslull.mbyapisec.model.entity.Yard;
 import com.marcuslull.mbyapisec.repository.AnimalRepository;
@@ -23,7 +25,10 @@ public class MapperService {
     private final UserRepository userRepository;
     private final YardRepository yardRepository;
 
-    public MapperService(PlantRepository plantRepository, AnimalRepository animalRepository, UserRepository userRepository, YardRepository yardRepository) {
+    public MapperService(PlantRepository plantRepository,
+                         AnimalRepository animalRepository,
+                         UserRepository userRepository,
+                         YardRepository yardRepository) {
         this.plantRepository = plantRepository;
         this.animalRepository = animalRepository;
         this.userRepository = userRepository;
@@ -36,8 +41,35 @@ public class MapperService {
             case "Yard", "YardDto" -> (T) mapYard(source);
             case "Plant", "PlantDto" -> (T) mapPlant(source);
             case "Animal", "AnimalDto" -> (T) mapAnimal(source);
+            case "Note", "NoteDto" -> (T) mapNote(source);
             default -> null;
         };
+    }
+
+    private Object mapNote(Object source) {
+        if (source instanceof Note note) {
+            NoteDto noteDto = new NoteDto();
+            noteDto.setId(note.getId());
+            noteDto.setCreated(note.getCreated());
+            noteDto.setUpdated(note.getUpdated());
+            noteDto.setOwner(note.getOwner());
+            noteDto.setComment(note.getComment());
+            noteDto.setYardId(noteDto.getYardId());
+            return noteDto;
+        } else {
+            NoteDto noteDto = (NoteDto) source;
+            Note note = new Note();
+            note.setId(noteDto.getId());
+            note.setCreated(noteDto.getCreated());
+            note.setUpdated(noteDto.getUpdated());
+            note.setOwner(note.getOwner());
+            note.setComment(noteDto.getComment());
+            if (noteDto.getYardId() != null) {
+                note.setYard(yardRepository.findYardByIdAndUserEmail(noteDto.getYardId(),
+                        SecurityContextHolder.getContext().getAuthentication().getName()));
+            }
+            return note;
+        }
     }
 
     private Object mapAnimal(Object source) {
