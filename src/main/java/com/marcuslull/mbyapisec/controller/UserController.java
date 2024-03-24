@@ -16,6 +16,6 @@ public class UserController {
 
     @GetMapping("/api/users")
     public ResponseEntity<Iterable<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+        return ResponseEntity.ok(userRepository.findAll()); // TODO: Exception possibility null
     }
 }

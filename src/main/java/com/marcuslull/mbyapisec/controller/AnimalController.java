@@ -21,22 +21,22 @@ public class AnimalController {
     }
 
     @GetMapping("/api/animal/{id}")
-    public ResponseEntity<AnimalDto> getAnimal(@PathVariable String id) {
-        AnimalDto animalDto = animalService.getAnimal(Long.valueOf(id));
+    public ResponseEntity<AnimalDto> getAnimal(@PathVariable String id) { // TODO: Exception possibility MethodArgumentConversionException
+        AnimalDto animalDto = animalService.getAnimal(Long.valueOf(id)); // TODO: Exception possibility NumberFormatException null
         if (animalDto == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build(); // TODO: Exception possibility null
         }
         return ResponseEntity.ok(animalDto);
     }
 
     @PostMapping("/api/animals")
-    public ResponseEntity<AnimalDto> postAnimals(@RequestBody AnimalDto animalDto) {
-        return ResponseEntity.ok(animalService.postAnimal(animalDto));
+    public ResponseEntity<AnimalDto> postAnimals(@RequestBody AnimalDto animalDto) { // TODO: Exception possibility HttpMessageNotReadableException MethodArgumentTypeMismatchException
+        return ResponseEntity.ok(animalService.postAnimal(animalDto)); // TODO: Exception possibility null
     }
 
     @DeleteMapping("/api/animal/{id}")
-    public ResponseEntity<String> deleteAnimal(@PathVariable String id) {
-        animalService.deleteAnimal(Long.valueOf(id));
+    public ResponseEntity<String> deleteAnimal(@PathVariable String id) { // TODO: Exception possibility MethodArgumentConversionException
+        animalService.deleteAnimal(Long.valueOf(id)); // TODO: Exception possibility NumberFormatException null
         return ResponseEntity.noContent().build();
     }
 }

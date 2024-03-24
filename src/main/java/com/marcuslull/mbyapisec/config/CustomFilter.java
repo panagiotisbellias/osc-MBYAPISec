@@ -12,6 +12,6 @@ public class CustomFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // Debugging class to gain entry to the filter chain - This will probably go away for production
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); // TODO: Exception possibility ServletException IOException
     }
 }

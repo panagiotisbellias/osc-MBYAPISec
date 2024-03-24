@@ -18,10 +18,10 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody Map<String, String> registrationInfo) {
+    public ResponseEntity<String> register(@RequestBody Map<String, String> registrationInfo) { // TODO: Exception possibility HttpMessageNotReadableException MethodArgumentTypeMismatchException
         // This is disabled until I get some email verification
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        if (registerService.register(registrationInfo)) {
+//        if (registerService.register(registrationInfo)) { // TODO: Exception possibility null
 //            return new ResponseEntity<>(HttpStatus.CREATED);
 //        }
 //        return new ResponseEntity<>("Email already exists", HttpStatus.CONFLICT);

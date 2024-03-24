@@ -17,26 +17,26 @@ public class PlantController {
 
     @GetMapping("/api/plants")
     public ResponseEntity<List<PlantDto>> getPlants() {
-        return ResponseEntity.ok(plantService.getPlants());
+        return ResponseEntity.ok(plantService.getPlants()); // TODO: Exception possibility null
     }
 
     @GetMapping("/api/plant/{id}")
-    public ResponseEntity<PlantDto> getPlant(@PathVariable String id) {
-        PlantDto plantDto = plantService.getPlant(Long.valueOf(id));
+    public ResponseEntity<PlantDto> getPlant(@PathVariable String id) { // TODO: Exception possibility MethodArgumentConversionException
+        PlantDto plantDto = plantService.getPlant(Long.valueOf(id)); // TODO: Exception possibility NumberFormatException null
         if (plantDto == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build(); // TODO: Exception possibility
         }
         return ResponseEntity.ok(plantDto);
     }
 
     @PostMapping("/api/plants")
-    public ResponseEntity<PlantDto> postPlants(@RequestBody PlantDto plantDto) {
-        return ResponseEntity.ok(plantService.postPlant(plantDto));
+    public ResponseEntity<PlantDto> postPlants(@RequestBody PlantDto plantDto) { // TODO: Exception possibility HttpMessageNotReadableException MethodArgumentTypeMismatchException
+        return ResponseEntity.ok(plantService.postPlant(plantDto)); // TODO: Exception possibility null
     }
 
     @DeleteMapping("/api/plant/{id}")
-    public ResponseEntity<String> deletePlant(@PathVariable String id) {
-        plantService.deletePlant(Long.valueOf(id));
+    public ResponseEntity<String> deletePlant(@PathVariable String id) { // TODO: Exception possibility MethodArgumentConversionException
+        plantService.deletePlant(Long.valueOf(id)); // TODO: Exception possibility NumberFormatException null
         return ResponseEntity.noContent().build();
     }
 }
