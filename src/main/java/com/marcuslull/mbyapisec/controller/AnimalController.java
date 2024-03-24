@@ -1,7 +1,6 @@
 package com.marcuslull.mbyapisec.controller;
 
 import com.marcuslull.mbyapisec.model.dto.AnimalDto;
-import com.marcuslull.mbyapisec.model.entity.Animal;
 import com.marcuslull.mbyapisec.service.AnimalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

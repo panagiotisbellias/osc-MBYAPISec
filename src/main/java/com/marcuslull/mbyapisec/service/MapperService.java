@@ -4,12 +4,8 @@ import com.marcuslull.mbyapisec.model.dto.AnimalDto;
 import com.marcuslull.mbyapisec.model.dto.NoteDto;
 import com.marcuslull.mbyapisec.model.dto.PlantDto;
 import com.marcuslull.mbyapisec.model.dto.YardDto;
-import com.marcuslull.mbyapisec.model.entity.Animal;
-import com.marcuslull.mbyapisec.model.entity.Note;
-import com.marcuslull.mbyapisec.model.entity.Plant;
-import com.marcuslull.mbyapisec.model.entity.Yard;
+import com.marcuslull.mbyapisec.model.entity.*;
 import com.marcuslull.mbyapisec.repository.*;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -22,27 +18,31 @@ public class MapperService {
     private final UserRepository userRepository;
     private final YardRepository yardRepository;
     private final NoteRepository noteRepository;
+    private final CustomAuthenticationProviderService customAuthenticationProviderService;
 
     public MapperService(PlantRepository plantRepository,
                          AnimalRepository animalRepository,
                          UserRepository userRepository,
                          YardRepository yardRepository,
-                         NoteRepository noteRepository) {
+                         NoteRepository noteRepository,
+                         CustomAuthenticationProviderService customAuthenticationProviderService) {
         this.plantRepository = plantRepository;
         this.animalRepository = animalRepository;
         this.userRepository = userRepository;
         this.yardRepository = yardRepository;
         this.noteRepository = noteRepository;
+        this.customAuthenticationProviderService = customAuthenticationProviderService;
     }
 
     public <T> T map(Object source) {
 
         return switch (source.getClass().getSimpleName()) {
+            // These casts should be safe with the ClassName check right... RIGHT?
             case "Yard", "YardDto" -> (T) mapYard(source);
             case "Plant", "PlantDto" -> (T) mapPlant(source);
             case "Animal", "AnimalDto" -> (T) mapAnimal(source);
             case "Note", "NoteDto" -> (T) mapNote(source);
-            default -> null; // TODO: Exception possibility null
+            default -> throw new RuntimeException("Mapper cannot match object passed with entity or dto");
         };
     }
 
@@ -63,12 +63,17 @@ public class MapperService {
             note.setCreated(noteDto.getCreated());
             note.setUpdated(noteDto.getUpdated());
             note.setComment(noteDto.getComment());
+
             if (noteDto.getOwner() == null) {
-                note.setOwner(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
+                note.setOwner(customAuthenticationProviderService.getAuthenticatedName());
             } else note.setOwner(noteDto.getOwner());
+
             if (noteDto.getYardId() != null) {
-                note.setYard(yardRepository.findYardByIdAndUserEmail(noteDto.getYardId(),
-                        SecurityContextHolder.getContext().getAuthentication().getName())); // TODO: Exception possibility null
+                Yard yard = yardRepository.findYardByIdAndUserEmail(noteDto.getYardId(),
+                        customAuthenticationProviderService.getAuthenticatedName());
+                if (yard != null) {
+                    note.setYard(yard);
+                } else throw new RuntimeException(); // TODO: Custom Exception
             }
             return note;
         }
@@ -99,8 +104,11 @@ public class MapperService {
             animal.setDietType(animalDto.getDietType());
             animal.setNativeAreaType(animalDto.getNativeAreaType());
             if (animalDto.getYardId() != null) {
-                animal.setYard(yardRepository.findYardByIdAndUserEmail(animalDto.getYardId(),
-                        SecurityContextHolder.getContext().getAuthentication().getName())); // TODO: Exception possibility null
+                Yard yard = yardRepository.findYardByIdAndUserEmail(animalDto.getYardId(),
+                        customAuthenticationProviderService.getAuthenticatedName());
+                if (yard != null) {
+                    animal.setYard(yard);
+                } else throw new RuntimeException(); // TODO: Custom Exception
             }
             return animal;
         }
@@ -137,8 +145,11 @@ public class MapperService {
             plant.setSunExposure(plantDto.getSunExposure());
             plant.setWateringFrequency(plantDto.getWateringFrequency());
             if (plantDto.getYardId() != null) {
-                plant.setYard(yardRepository.findYardByIdAndUserEmail(plantDto.getYardId(),
-                        SecurityContextHolder.getContext().getAuthentication().getName())); // TODO: Exception possibility null
+                Yard yard = yardRepository.findYardByIdAndUserEmail(plantDto.getYardId(),
+                        customAuthenticationProviderService.getAuthenticatedName());
+                if (yard != null) {
+                    plant.setYard(yard);
+                } else throw new RuntimeException(); // TODO: Custom Exception
             }
             return plant;
         }
@@ -179,7 +190,10 @@ public class MapperService {
                 yard.setNotes(yardDto.getNoteIds().stream().map(note -> noteRepository.findById(note)
                         .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
             }
-            yard.setUser(userRepository.findUserByEmail(yardDto.getUserEmail())); // TODO: Exception possibility null
+            User user = userRepository.findUserByEmail(yardDto.getUserEmail());
+            if (user != null) {
+                yard.setUser(user);
+            } else throw new RuntimeException(); // TODO: Custom Exception
             return yard;
         }
     }

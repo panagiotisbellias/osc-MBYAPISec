@@ -21,18 +21,18 @@ public class RegisterService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Boolean register(Map<String, String> registrationInfo) {
-        User user = userRepository.findUserByEmail(registrationInfo.get("email")); // TODO: Exception possibility null
-        if (user == null) {
-            user = new User();
-            user.setEmail(registrationInfo.get("email"));
-            user.setPassword(passwordEncoder.encode(registrationInfo.get("password")));
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(registrationInfo.get("role"));
-            List<GrantedAuthority> grantedAuthorities = List.of(grantedAuthority);
-            user.setGrantedAuthority(grantedAuthorities);
-            userRepository.save(user); // IllegalArgumentException caught in the GlobalExceptionHandler
-            return true;
-        }
-        return false; // TODO: Exception possibility null
+    public void register(Map<String, String> registrationInfo) {
+        if (registrationInfo.containsKey("email") && registrationInfo.containsKey("password") && registrationInfo.containsKey("role")) {
+            User user = userRepository.findUserByEmail(registrationInfo.get("email"));
+            if (user == null) {
+                user = new User();
+                user.setEmail(registrationInfo.get("email"));
+                user.setPassword(passwordEncoder.encode(registrationInfo.get("password")));
+                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(registrationInfo.get("role"));
+                List<GrantedAuthority> grantedAuthorities = List.of(grantedAuthority);
+                user.setGrantedAuthority(grantedAuthorities);
+                userRepository.save(user);
+            } else throw new RuntimeException(); // TODO: Custom exception - User already exists
+        } else throw new RuntimeException(); // TODO: Custom exception - The registration is not formed correctly
     }
 }
