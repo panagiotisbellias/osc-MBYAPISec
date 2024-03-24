@@ -32,7 +32,7 @@ public class PlantService {
 
     public PlantDto postPlant(PlantDto plantDto) {
         plantDto.setOwner(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
-        return mapperService.map(plantRepository.save(mapperService.map(plantDto))); // TODO: Exception possibility IllegalArgumentException
+        return mapperService.map(plantRepository.save(mapperService.map(plantDto))); // IllegalArgumentException caught in the GlobalExceptionHandler
     }
 
     public PlantDto getPlant(Long id) {

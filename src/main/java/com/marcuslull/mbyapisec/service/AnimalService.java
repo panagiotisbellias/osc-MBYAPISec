@@ -32,7 +32,7 @@ public class AnimalService {
 
     public AnimalDto postAnimal(AnimalDto animalDto) {
         animalDto.setOwner(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
-        return mapperService.map(animalRepository.save(mapperService.map(animalDto))); // TODO: Exception possibility IllegalArgumentException
+        return mapperService.map(animalRepository.save(mapperService.map(animalDto))); // IllegalArgumentException caught in GlobalExceptionHandler // TODO: Exception possibility null
     }
 
     public AnimalDto getAnimal(Long id) {

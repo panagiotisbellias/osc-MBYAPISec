@@ -30,7 +30,7 @@ public class RegisterService {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(registrationInfo.get("role"));
             List<GrantedAuthority> grantedAuthorities = List.of(grantedAuthority);
             user.setGrantedAuthority(grantedAuthorities);
-            userRepository.save(user); // TODO: Exception possibility IllegalArgumentException
+            userRepository.save(user); // IllegalArgumentException caught in the GlobalExceptionHandler
             return true;
         }
         return false; // TODO: Exception possibility null

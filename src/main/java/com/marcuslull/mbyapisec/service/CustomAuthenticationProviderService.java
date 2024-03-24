@@ -20,19 +20,19 @@ public class CustomAuthenticationProviderService implements AuthenticationProvid
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException { // TODO: Exception possibility AuthenticationException
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException { // AuthenticationException caught in the GlobalExceptionHandler
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        UserDetails userDetails = userService.loadUserByUsername(email); // TODO: Exception possibility UsernameNotFoundException
+        UserDetails userDetails = userService.loadUserByUsername(email); // UsernameNotFoundException caught in the GlobalExceptionHandler
         if (userDetails != null) {
             if (passwordEncoder.matches(password, userDetails.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
-            } else throw new BadCredentialsException("Invalid Password!"); // TODO: Exception possibility BadCredentialsException
-        } else throw new BadCredentialsException("Invalid email!"); // TODO: Exception possibility BadCredentialsException
+            } else throw new BadCredentialsException("Invalid Password!"); // BadCredentialsException caught in the GlobalExceptionHandler
+        } else throw new BadCredentialsException("Invalid email!"); // BadCredentialsException caught in the GlobalExceptionHandler
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication); // TODO: Exception possibility NullPointerException
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication); // NullPointerException caught in the GlobalExceptionHandler
     }
 }

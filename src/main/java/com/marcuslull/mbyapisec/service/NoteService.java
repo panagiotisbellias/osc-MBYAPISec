@@ -23,7 +23,7 @@ public class NoteService {
     public List<NoteDto> getNotesForYard(String yardId) {
         List<NoteDto> noteDtos = new ArrayList<>();
         noteRepository.findNotesByOwnerAndYardId(SecurityContextHolder.getContext().getAuthentication().getName(),
-                        Long.valueOf(yardId)) // TODO: Exception possibility NumberFormatException
+                        Long.valueOf(yardId)) // NumberFormatException caught in the GlobalExceptionHandler
                 .forEach(note -> {
                     NoteDto noteDto = mapperService.map(note);
                     noteDtos.add(noteDto);
@@ -33,7 +33,7 @@ public class NoteService {
 
     public NoteDto getNote(String id) {
         return mapperService.map(noteRepository.findNoteByOwnerAndId(SecurityContextHolder.getContext().getAuthentication().getName(),
-                Long.valueOf(id))); // TODO: Exception possibility NumberFormatException
+                Long.valueOf(id))); // NumberFormatException caught in the GlobalExceptionHandler
     }
 
     public NoteDto postNote(NoteDto noteDto) {
@@ -43,21 +43,21 @@ public class NoteService {
 
     public NoteDto putNote(String noteId, NoteDto noteDto) {
         // it's just the comment that might be changing - this can also double as a PATCH
-        noteDto.setId(Long.valueOf(noteId)); // TODO: Exception possibility NumberFormatException
+        noteDto.setId(Long.valueOf(noteId)); // NumberFormatException caught in the GlobalExceptionHandler
         noteDto.setOwner(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
         Note oldNote = noteRepository.findNoteByOwnerAndId(noteDto.getOwner(), noteDto.getId()); // TODO: Exception possibility null
         if (oldNote != null) {
             noteDto.setYardId(oldNote.getYard().getId());
             noteDto.setCreated(oldNote.getCreated());
-            return mapperService.map(noteRepository.save(mapperService.map(noteDto))); // TODO: Exception possibility IllegalArgumentException
+            return mapperService.map(noteRepository.save(mapperService.map(noteDto))); // IllegalArgumentException caught in the GlobalExceptionHandler
         }
         return null; // TODO: Exception possibility null
     }
 
     @Transactional
     public void deleteNote(String id) {
-        if (noteRepository.existsById(Long.valueOf(id))) { // TODO: Exception possibility NumberFormatException
-            noteRepository.deleteNoteByIdAndOwner(Long.valueOf(id), SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null NumberFormatException
+        if (noteRepository.existsById(Long.valueOf(id))) { // NumberFormatException caught in the GlobalExceptionHandler
+            noteRepository.deleteNoteByIdAndOwner(Long.valueOf(id), SecurityContextHolder.getContext().getAuthentication().getName()); // NumberFormatException caught in the GlobalExceptionHandler // TODO: Exception possibility null
         }
     }
 }

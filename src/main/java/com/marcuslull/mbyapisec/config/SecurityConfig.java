@@ -40,7 +40,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception { // TODO: Exception possibility Exception
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception { // Caught in GlobalException Handler
         return httpSecurity
                 .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override

@@ -169,15 +169,15 @@ public class MapperService {
             yard.setYardSubType(yardDto.getYardSubType());
             if (yardDto.getPlantIds() != null) {
                 yard.setPlants(yardDto.getPlantIds().stream().map(plant -> plantRepository.findById(plant)
-                        .get()).collect(Collectors.toList())); // TODO: Exception possibility NoSuchElementException
+                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
             }
             if (yardDto.getAnimalIds() != null) {
                 yard.setAnimals(yardDto.getAnimalIds().stream().map(animal -> animalRepository.findById(animal)
-                        .get()).collect(Collectors.toList())); // TODO: Exception possibility NoSuchElementException
+                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
             }
             if (yardDto.getNoteIds() != null) {
                 yard.setNotes(yardDto.getNoteIds().stream().map(note -> noteRepository.findById(note)
-                        .get()).collect(Collectors.toList())); // TODO: Exception possibility NoSuchElementException
+                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
             }
             yard.setUser(userRepository.findUserByEmail(yardDto.getUserEmail())); // TODO: Exception possibility null
             return yard;
