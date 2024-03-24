@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 public class PlantController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final PlantService plantService;
 
     public PlantController(PlantService plantService) {
@@ -17,26 +18,25 @@ public class PlantController {
 
     @GetMapping("/api/plants")
     public ResponseEntity<List<PlantDto>> getPlants() {
-        return ResponseEntity.ok(plantService.getPlants()); // TODO: Exception possibility null
+        return ResponseEntity.ok(plantService.getPlants());
     }
 
     @GetMapping("/api/plant/{id}")
-    public ResponseEntity<PlantDto> getPlant(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        PlantDto plantDto = plantService.getPlant(Long.valueOf(id)); // NumberFormatException caught in GlobalExceptionHandler
-        if (plantDto == null) {
-            return ResponseEntity.notFound().build(); // TODO: Exception possibility null
-        }
-        return ResponseEntity.ok(plantDto);
+    public ResponseEntity<PlantDto> getPlant(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(plantService.getPlant(Long.valueOf(id)));
     }
 
     @PostMapping("/api/plants")
-    public ResponseEntity<PlantDto> postPlants(@RequestBody PlantDto plantDto) { // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
-        return ResponseEntity.ok(plantService.postPlant(plantDto)); // TODO: Exception possibility null
+    public ResponseEntity<PlantDto> postPlants(@RequestBody PlantDto plantDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(plantService.postPlant(plantDto));
     }
 
     @DeleteMapping("/api/plant/{id}")
-    public ResponseEntity<String> deletePlant(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        plantService.deletePlant(Long.valueOf(id)); // TODO: Exception possibility NumberFormatException null
+    public ResponseEntity<String> deletePlant(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        plantService.deletePlant(Long.valueOf(id));
         return ResponseEntity.noContent().build();
     }
 }

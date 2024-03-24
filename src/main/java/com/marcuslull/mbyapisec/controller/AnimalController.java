@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 public class AnimalController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final AnimalService animalService;
 
     public AnimalController(AnimalService animalService) {
@@ -18,26 +19,26 @@ public class AnimalController {
 
     @GetMapping("/api/animals")
     public ResponseEntity<List<AnimalDto>> getAnimals() {
-        return ResponseEntity.ok(animalService.getAnimals()); // nulls handled in service
+        return ResponseEntity.ok(animalService.getAnimals());
     }
 
     @GetMapping("/api/animal/{id}")
-    public ResponseEntity<AnimalDto> getAnimal(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        AnimalDto animalDto = animalService.getAnimal(Long.valueOf(id)); // NumberFormatException caught in GlobalExceptionHandler
-        if (animalDto == null) {
-            return ResponseEntity.notFound().build(); // TODO: Exception possibility null
-        }
+    public ResponseEntity<AnimalDto> getAnimal(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        AnimalDto animalDto = animalService.getAnimal(Long.valueOf(id));
         return ResponseEntity.ok(animalDto);
     }
 
     @PostMapping("/api/animals")
-    public ResponseEntity<AnimalDto> postAnimals(@RequestBody AnimalDto animalDto) { // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
-        return ResponseEntity.ok(animalService.postAnimal(animalDto)); // TODO: Exception possibility null
+    public ResponseEntity<AnimalDto> postAnimals(@RequestBody AnimalDto animalDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(animalService.postAnimal(animalDto));
     }
 
     @DeleteMapping("/api/animal/{id}")
-    public ResponseEntity<String> deleteAnimal(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        animalService.deleteAnimal(Long.valueOf(id)); // TODO: Exception possibility NumberFormatException null
+    public ResponseEntity<String> deleteAnimal(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        animalService.deleteAnimal(Long.valueOf(id));
         return ResponseEntity.noContent().build();
     }
 }

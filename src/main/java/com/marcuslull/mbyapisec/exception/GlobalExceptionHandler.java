@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
 
     // IOException - extends Exception - Signals that an I/O exception of some sort has occurred. This class is the general class of exceptions produced by failed or interrupted I/O operations.
     // ServletException - extends Exception - Defines a general exception a servlet can throw when it encounters difficulty.
+    // RuntimeException - extends Exception - RuntimeException is the superclass of those exceptions that can be thrown during the normal operation of the Java Virtual Machine.
 
     // Exception - extends Throwable - The class Exception and its subclasses are a form of Throwable that indicates conditions that a reasonable application might want to catch.
 

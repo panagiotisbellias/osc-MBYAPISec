@@ -73,13 +73,19 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build(); // TODO: Exception possibility null
+        if (rsaKeyProperties.publicKey() != null) {
+            return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build();
+        }
+        throw new RuntimeException("jwtDecoder says: Missing RSA key");
     }
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey()).privateKey(rsaKeyProperties.privateKey()).build(); // TODO: Exception possibility null
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
+        if (rsaKeyProperties.publicKey() != null && rsaKeyProperties.privateKey() != null) {
+            JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey()).privateKey(rsaKeyProperties.privateKey()).build();
+            JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+            return new NimbusJwtEncoder(jwks);
+        }
+        throw new RuntimeException("jwtEncoder says: Missing RSA key");
     }
 }

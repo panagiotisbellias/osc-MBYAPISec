@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 public class YardController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final YardService yardService;
 
     public YardController(YardService yardService) {
@@ -17,35 +18,31 @@ public class YardController {
 
     @GetMapping("/api/yards")
     public ResponseEntity<List<YardDto>> getYards() {
-        return ResponseEntity.ok(yardService.getYards()); // TODO: Exception possibility null
+        return ResponseEntity.ok(yardService.getYards());
     }
 
     @GetMapping("/api/yard/{id}")
-    public ResponseEntity<YardDto> getYard(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        YardDto yardDto = yardService.getYard(Long.valueOf(id)); // NumberFormatException caught in GlobalExceptionHandler
-        if (yardDto == null) {
-            return ResponseEntity.notFound().build(); // TODO: Exception possibility null
-        }
-        return ResponseEntity.ok(yardDto);
+    public ResponseEntity<YardDto> getYard(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(yardService.getYard(Long.valueOf(id)));
     }
 
     @PostMapping("/api/yards")
-    public ResponseEntity<YardDto> postYards(@RequestBody YardDto yardDto) { // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
-        return ResponseEntity.ok(yardService.postYard(yardDto)); // TODO: Exception possibility null
+    public ResponseEntity<YardDto> postYards(@RequestBody YardDto yardDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(yardService.postYard(yardDto));
     }
 
     @PutMapping("/api/yard/{id}")
-    public ResponseEntity<YardDto> putYard(@PathVariable String id, @RequestBody YardDto yardDto) { // HttpMessageNotReadableException MethodArgumentConversionException NumberFormatException caught in GlobalExceptionHandler
-        YardDto returnedYard = yardService.putYard(id, yardDto); // TODO: Exception possibility null
-        if (returnedYard != null) {
-            return ResponseEntity.ok(returnedYard);
-        }
-        return ResponseEntity.notFound().build(); // TODO: Exception possibility null
+    public ResponseEntity<YardDto> putYard(@PathVariable String id, @RequestBody YardDto yardDto) {
+        // HttpMessageNotReadableException MethodArgumentConversionException NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(yardService.putYard(id, yardDto));
     }
 
     @DeleteMapping("/api/yard/{id}")
-    public ResponseEntity<String> deleteYard(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        yardService.deleteYard(Long.valueOf(id)); // NumberFormatException caught in GlobalExceptionHandler
+    public ResponseEntity<String> deleteYard(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        yardService.deleteYard(Long.valueOf(id));
         return ResponseEntity.noContent().build();
     }
 }

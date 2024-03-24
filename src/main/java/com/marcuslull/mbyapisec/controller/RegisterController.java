@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 public class RegisterController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final RegisterService registerService;
 
     public RegisterController(RegisterService registerService) {
@@ -18,12 +19,11 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody Map<String, String> registrationInfo) { // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
+    public ResponseEntity<String> register(@RequestBody Map<String, String> registrationInfo) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         // This is disabled until I get some email verification
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        if (registerService.register(registrationInfo)) { // TODO: Exception possibility null
-//            return new ResponseEntity<>(HttpStatus.CREATED);
-//        }
-//        return new ResponseEntity<>("Email already exists", HttpStatus.CONFLICT);
+//        registerService.register(registrationInfo);
+//        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

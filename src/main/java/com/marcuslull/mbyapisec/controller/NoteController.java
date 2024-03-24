@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 public class NoteController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final NoteService noteService;
 
     public NoteController(NoteService noteService) {
@@ -16,35 +17,32 @@ public class NoteController {
     }
 
     @GetMapping("/api/yard/{id}/notes")
-    public ResponseEntity<List<NoteDto>> getNotesForYard(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        return ResponseEntity.ok(noteService.getNotesForYard(id)); // TODO: Exception possibility null
+    public ResponseEntity<List<NoteDto>> getNotesForYard(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(noteService.getNotesForYard(id));
     }
 
     @GetMapping("/api/note/{id}")
-    public ResponseEntity<NoteDto> getNote(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
-        NoteDto returnedNoteDto = noteService.getNote(id); // TODO: Exception possibility null
-        if (returnedNoteDto == null) {
-            return ResponseEntity.notFound().build(); // TODO: Exception possibility null
-        }
-        return ResponseEntity.ok(noteService.getNote(id)); // TODO: Exception possibility null
+    public ResponseEntity<NoteDto> getNote(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(noteService.getNote(id));
     }
 
     @PostMapping("/api/notes")
-    public ResponseEntity<NoteDto> postNote(@RequestBody NoteDto noteDto) { // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
-        return ResponseEntity.ok(noteService.postNote(noteDto)); // TODO: Exception possibility null
+    public ResponseEntity<NoteDto> postNote(@RequestBody NoteDto noteDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(noteService.postNote(noteDto));
     }
 
     @PutMapping("/api/note/{id}")
-    public ResponseEntity<NoteDto> putNote(@PathVariable String id, @RequestBody NoteDto noteDto) { // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
-        NoteDto returnedNoteDto = noteService.putNote(id, noteDto);
-        if (returnedNoteDto == null) { // TODO: Exception possibility null
-            ResponseEntity.notFound().build(); // TODO: Exception possibility null
-        }
-        return ResponseEntity.ok(returnedNoteDto);
+    public ResponseEntity<NoteDto> putNote(@PathVariable String id, @RequestBody NoteDto noteDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(noteService.putNote(id, noteDto));
     }
 
     @DeleteMapping("/api/note/{id}")
-    public ResponseEntity<String> deleteNote(@PathVariable String id) { // NumberFormatException caught in GlobalExceptionHandler
+    public ResponseEntity<String> deleteNote(@PathVariable String id) {
+        // NumberFormatException caught in GlobalExceptionHandler
         noteService.deleteNote(id);
         return ResponseEntity.noContent().build();
     }
