@@ -22,7 +22,7 @@ public class RegisterService {
     }
 
     public Boolean register(Map<String, String> registrationInfo) {
-        User user = userRepository.findUserByEmail(registrationInfo.get("email"));
+        User user = userRepository.findUserByEmail(registrationInfo.get("email")); // TODO: Exception possibility null
         if (user == null) {
             user = new User();
             user.setEmail(registrationInfo.get("email"));
@@ -30,9 +30,9 @@ public class RegisterService {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(registrationInfo.get("role"));
             List<GrantedAuthority> grantedAuthorities = List.of(grantedAuthority);
             user.setGrantedAuthority(grantedAuthorities);
-            userRepository.save(user);
+            userRepository.save(user); // TODO: Exception possibility IllegalArgumentException
             return true;
         }
-        return false;
+        return false; // TODO: Exception possibility null
     }
 }

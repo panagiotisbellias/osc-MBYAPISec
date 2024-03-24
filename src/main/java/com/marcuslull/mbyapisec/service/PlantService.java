@@ -22,7 +22,7 @@ public class PlantService {
 
     public List<PlantDto> getPlants() {
         List<PlantDto> plantDtos = new ArrayList<>();
-        plantRepository.findPlantsByOwner(SecurityContextHolder.getContext().getAuthentication().getName())
+        plantRepository.findPlantsByOwner(SecurityContextHolder.getContext().getAuthentication().getName()) // TODO: Exception possibility null
                 .forEach(plant -> {
                     PlantDto plantDto = mapperService.map(plant);
                     plantDtos.add(plantDto);
@@ -31,20 +31,20 @@ public class PlantService {
     }
 
     public PlantDto postPlant(PlantDto plantDto) {
-        plantDto.setOwner(SecurityContextHolder.getContext().getAuthentication().getName());
-        return mapperService.map(plantRepository.save(mapperService.map(plantDto)));
+        plantDto.setOwner(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
+        return mapperService.map(plantRepository.save(mapperService.map(plantDto))); // TODO: Exception possibility IllegalArgumentException
     }
 
     public PlantDto getPlant(Long id) {
-        Plant plant = plantRepository.findPlantByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        Plant plant = plantRepository.findPlantByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
         if (plant != null) {
             return mapperService.map(plant);
         }
-        return null;
+        return null; // TODO: Exception possibility null
     }
 
     @Transactional
     public void deletePlant(Long id) {
-        plantRepository.deletePlantByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        plantRepository.deletePlantByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
     }
 }

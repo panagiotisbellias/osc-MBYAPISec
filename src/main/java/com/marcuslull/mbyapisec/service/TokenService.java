@@ -36,6 +36,6 @@ public class TokenService {
                 .id(UUID.randomUUID().toString())
                 .claim("scope", scope)
                 .build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue(); // TODO: Exception possibility JwtEncodingException
     }
 }

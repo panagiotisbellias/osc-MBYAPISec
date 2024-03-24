@@ -20,19 +20,19 @@ public class CustomAuthenticationProviderService implements AuthenticationProvid
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException { // TODO: Exception possibility AuthenticationException
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        UserDetails userDetails = userService.loadUserByUsername(email);
+        UserDetails userDetails = userService.loadUserByUsername(email); // TODO: Exception possibility UsernameNotFoundException
         if (userDetails != null) {
             if (passwordEncoder.matches(password, userDetails.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
-            } else throw new BadCredentialsException("Invalid Password!");
-        } else throw new BadCredentialsException("Invalid email!");
+            } else throw new BadCredentialsException("Invalid Password!"); // TODO: Exception possibility BadCredentialsException
+        } else throw new BadCredentialsException("Invalid email!"); // TODO: Exception possibility BadCredentialsException
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication); // TODO: Exception possibility NullPointerException
     }
 }

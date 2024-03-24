@@ -42,7 +42,7 @@ public class MapperService {
             case "Plant", "PlantDto" -> (T) mapPlant(source);
             case "Animal", "AnimalDto" -> (T) mapAnimal(source);
             case "Note", "NoteDto" -> (T) mapNote(source);
-            default -> null;
+            default -> null; // TODO: Exception possibility null
         };
     }
 
@@ -64,11 +64,11 @@ public class MapperService {
             note.setUpdated(noteDto.getUpdated());
             note.setComment(noteDto.getComment());
             if (noteDto.getOwner() == null) {
-                note.setOwner(SecurityContextHolder.getContext().getAuthentication().getName());
+                note.setOwner(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
             } else note.setOwner(noteDto.getOwner());
             if (noteDto.getYardId() != null) {
                 note.setYard(yardRepository.findYardByIdAndUserEmail(noteDto.getYardId(),
-                        SecurityContextHolder.getContext().getAuthentication().getName()));
+                        SecurityContextHolder.getContext().getAuthentication().getName())); // TODO: Exception possibility null
             }
             return note;
         }
@@ -100,7 +100,7 @@ public class MapperService {
             animal.setNativeAreaType(animalDto.getNativeAreaType());
             if (animalDto.getYardId() != null) {
                 animal.setYard(yardRepository.findYardByIdAndUserEmail(animalDto.getYardId(),
-                        SecurityContextHolder.getContext().getAuthentication().getName()));
+                        SecurityContextHolder.getContext().getAuthentication().getName())); // TODO: Exception possibility null
             }
             return animal;
         }
@@ -138,7 +138,7 @@ public class MapperService {
             plant.setWateringFrequency(plantDto.getWateringFrequency());
             if (plantDto.getYardId() != null) {
                 plant.setYard(yardRepository.findYardByIdAndUserEmail(plantDto.getYardId(),
-                        SecurityContextHolder.getContext().getAuthentication().getName()));
+                        SecurityContextHolder.getContext().getAuthentication().getName())); // TODO: Exception possibility null
             }
             return plant;
         }
@@ -169,17 +169,17 @@ public class MapperService {
             yard.setYardSubType(yardDto.getYardSubType());
             if (yardDto.getPlantIds() != null) {
                 yard.setPlants(yardDto.getPlantIds().stream().map(plant -> plantRepository.findById(plant)
-                        .get()).collect(Collectors.toList()));
+                        .get()).collect(Collectors.toList())); // TODO: Exception possibility NoSuchElementException
             }
             if (yardDto.getAnimalIds() != null) {
                 yard.setAnimals(yardDto.getAnimalIds().stream().map(animal -> animalRepository.findById(animal)
-                        .get()).collect(Collectors.toList()));
+                        .get()).collect(Collectors.toList())); // TODO: Exception possibility NoSuchElementException
             }
             if (yardDto.getNoteIds() != null) {
                 yard.setNotes(yardDto.getNoteIds().stream().map(note -> noteRepository.findById(note)
-                        .get()).collect(Collectors.toList()));
+                        .get()).collect(Collectors.toList())); // TODO: Exception possibility NoSuchElementException
             }
-            yard.setUser(userRepository.findUserByEmail(yardDto.getUserEmail()));
+            yard.setUser(userRepository.findUserByEmail(yardDto.getUserEmail())); // TODO: Exception possibility null
             return yard;
         }
     }

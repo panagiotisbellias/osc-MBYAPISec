@@ -22,7 +22,7 @@ public class AnimalService {
 
     public List<AnimalDto> getAnimals() {
         List<AnimalDto> animalDtos = new ArrayList<>();
-        animalRepository.findAnimalsByOwner(SecurityContextHolder.getContext().getAuthentication().getName())
+        animalRepository.findAnimalsByOwner(SecurityContextHolder.getContext().getAuthentication().getName()) // TODO: Exception possibility null
                 .forEach(animal -> {
                     AnimalDto animalDto = mapperService.map(animal);
                     animalDtos.add(animalDto);
@@ -31,20 +31,20 @@ public class AnimalService {
     }
 
     public AnimalDto postAnimal(AnimalDto animalDto) {
-        animalDto.setOwner(SecurityContextHolder.getContext().getAuthentication().getName());
-        return mapperService.map(animalRepository.save(mapperService.map(animalDto)));
+        animalDto.setOwner(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
+        return mapperService.map(animalRepository.save(mapperService.map(animalDto))); // TODO: Exception possibility IllegalArgumentException
     }
 
     public AnimalDto getAnimal(Long id) {
-        Animal animal = animalRepository.findAnimalByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        Animal animal = animalRepository.findAnimalByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
         if (animal != null) {
             return mapperService.map(animal);
         }
-        return null;
+        return null; // TODO: Exception possibility null
     }
 
     @Transactional
     public void deleteAnimal(Long id) {
-        animalRepository.deleteAnimalByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        animalRepository.deleteAnimalByIdAndOwner(id, SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
     }
 }

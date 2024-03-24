@@ -22,7 +22,7 @@ public class YardService {
 
     public List<YardDto> getYards() {
         List<YardDto> yardDtos = new ArrayList<>();
-        yardRepository.findYardsByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+        yardRepository.findYardsByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName()) // TODO: Exception possibility null
                 .forEach(yard -> {
                     YardDto yardDto = mapperService.map(yard);
                     yardDtos.add(yardDto);
@@ -31,22 +31,22 @@ public class YardService {
     }
 
     public YardDto getYard(Long id) {
-        Yard yard = yardRepository.findYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        Yard yard = yardRepository.findYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
         if (yard != null) {
             return mapperService.map(yard);
         }
-        return null;
+        return null; // TODO: Exception possibility null
     }
 
     public YardDto postYard(YardDto yardDto) {
-        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
+        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
+        return mapperService.map(yardRepository.save(mapperService.map(yardDto))); // TODO: Exception possibility IllegalArgumentException
     }
 
     public YardDto putYard(String id, YardDto yardDto) {
-        yardDto.setId(Long.valueOf(id));
-        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        Yard yard = yardRepository.findYardByIdAndUserEmail(yardDto.getId(), yardDto.getUserEmail());
+        yardDto.setId(Long.valueOf(id)); // TODO: Exception possibility NumberFormatException
+        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
+        Yard yard = yardRepository.findYardByIdAndUserEmail(yardDto.getId(), yardDto.getUserEmail()); // TODO: Exception possibility null
         if (yard != null) {
             yardDto.setCreated(yard.getCreated());
             List<Long> plants = new ArrayList<>();
@@ -61,15 +61,15 @@ public class YardService {
             yard.getNotes().forEach(note -> notes.add(note.getId()));
             yardDto.setNoteIds(notes);
 
-            return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
+            return mapperService.map(yardRepository.save(mapperService.map(yardDto))); // TODO: Exception possibility IllegalArgumentException
         }
-        return null;
+        return null; // TODO: Exception possibility null
     }
 
     @Transactional
     public void deleteYard(Long id) {
-        if (yardRepository.existsById(id)) {
-            yardRepository.deleteYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        if (yardRepository.existsById(id)) { // TODO: Exception possibility IllegalArgumentException
+            yardRepository.deleteYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName()); // TODO: Exception possibility null
         }
     }
 }
