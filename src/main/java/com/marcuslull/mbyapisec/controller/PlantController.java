@@ -22,9 +22,9 @@ public class PlantController {
     }
 
     @GetMapping("/api/plant/{id}")
-    public ResponseEntity<PlantDto> getPlant(@PathVariable String id) {
+    public ResponseEntity<PlantDto> getPlant(@PathVariable Long id) {
         // NumberFormatException caught in GlobalExceptionHandler
-        return ResponseEntity.ok(plantService.getPlant(Long.valueOf(id)));
+        return ResponseEntity.ok(plantService.getPlant(id));
     }
 
     @PostMapping("/api/plants")
@@ -34,9 +34,8 @@ public class PlantController {
     }
 
     @DeleteMapping("/api/plant/{id}")
-    public ResponseEntity<String> deletePlant(@PathVariable String id) {
-        // NumberFormatException caught in GlobalExceptionHandler
-        plantService.deletePlant(Long.valueOf(id));
+    public ResponseEntity<String> deletePlant(@PathVariable Long id) {
+        plantService.deletePlant(id);
         return ResponseEntity.noContent().build();
     }
 }

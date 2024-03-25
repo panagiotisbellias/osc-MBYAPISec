@@ -1,5 +1,7 @@
 package com.marcuslull.mbyapisec.service;
 
+import com.marcuslull.mbyapisec.exception.InvalidRegistrationFormatException;
+import com.marcuslull.mbyapisec.exception.UsernameAlreadyExistsException;
 import com.marcuslull.mbyapisec.model.entity.User;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +34,7 @@ public class RegisterService {
                 List<GrantedAuthority> grantedAuthorities = List.of(grantedAuthority);
                 user.setGrantedAuthority(grantedAuthorities);
                 userRepository.save(user);
-            } else throw new RuntimeException(); // TODO: Custom exception - User already exists
-        } else throw new RuntimeException(); // TODO: Custom exception - The registration is not formed correctly
+            } else throw new UsernameAlreadyExistsException("User already exists");
+        } else throw new InvalidRegistrationFormatException("Invalid registration format");
     }
 }

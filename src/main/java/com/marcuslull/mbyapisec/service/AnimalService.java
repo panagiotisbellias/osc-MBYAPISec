@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class AnimalService {
@@ -35,7 +36,6 @@ public class AnimalService {
 
     public AnimalDto postAnimal(AnimalDto animalDto) {
         animalDto.setOwner(customAuthenticationProviderService.getAuthenticatedName());
-        // IllegalArgumentException caught in GlobalExceptionHandler
         return mapperService.map(animalRepository.save(mapperService.map(animalDto)));
     }
 
@@ -44,7 +44,7 @@ public class AnimalService {
                 customAuthenticationProviderService.getAuthenticatedName());
         if (animal != null) {
             return mapperService.map(animal);
-        } else throw new RuntimeException(); // TODO: Custom Exception
+        } else throw new NoSuchElementException();
     }
 
     @Transactional

@@ -1,32 +1,98 @@
 package com.marcuslull.mbyapisec.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // NULL - This will probably end up being several custom exceptions
+    @ExceptionHandler(UserRegistrationException.class)
+    public ResponseEntity<String> handleUserRegistrationExceptions(Exception exception) {
+        // UserRegistrationException - extends RuntimeException - Custom Exception to handle any user registration issues
 
-    // Tiers of Exceptions (more specific > less specific):
-    // JwtEncodingException - extends JwtException > RuntimeException - This exception is thrown when an error occurs while attempting to encode a JSON Web Token (JWT).
+        // Also handling: UsernameAlreadyExistsException InvalidRegistrationFormatException. These exceptions will fall through to here.
 
-    // UsernameNotFoundException - extends AuthenticationException > RuntimeException - Thrown if an UserDetailsService implementation cannot locate a User by its username.
-    // BadCredentialsException - extends AuthenticationException > RuntimeException - Thrown if an authentication request is rejected because the credentials are invalid. For this exception to be thrown, it means the account is neither locked nor disabled.
+        // TODO: Logging the exception message
 
-    // HttpMessageNotReadableException - extends HttpMessageConversionException > RuntimeException - Thrown by HttpMessageConverter implementations when the HttpMessageConverter.read(java.lang.Class<? extends T>, org.springframework.http.HttpInputMessage) method fails.
-    // MethodArgumentTypeMismatchException - extends MethodArgumentResolutionException > RuntimeException - Exception that indicates that a method argument has not the expected type.
+        System.out.println("handleUserRegistrationExceptions");
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
-    // NumberFormatException - extends IllegalArgumentException > RuntimeException - Thrown to indicate that the application has attempted to convert a string to one of the numeric types, but that the string does not have the appropriate format.
 
-    // NoSuchElementException - extends RuntimeException - Thrown by various accessor methods to indicate that the element being requested does not exist.
-    // NullPointerException - extends RuntimeException - Thrown when an application attempts to use null in a case where an object is required.
-    // AuthenticationException - extends RuntimeException - Abstract superclass for all exceptions related to an Authentication object being invalid for whatever reason.
-    // IllegalArgumentException - extends RuntimeException - Thrown to indicate that a method has been passed an illegal or inappropriate argument.
+    @ExceptionHandler({NumberFormatException.class, HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<String> handleBadRequest(Exception exception) {
+        // NumberFormatException - extends IllegalArgumentException > RuntimeException - Thrown to indicate that the
+        // application has attempted to convert a string to one of the numeric types, but that the string does not have
+        // the appropriate format.
 
-    // IOException - extends Exception - Signals that an I/O exception of some sort has occurred. This class is the general class of exceptions produced by failed or interrupted I/O operations.
-    // ServletException - extends Exception - Defines a general exception a servlet can throw when it encounters difficulty.
-    // RuntimeException - extends Exception - RuntimeException is the superclass of those exceptions that can be thrown during the normal operation of the Java Virtual Machine.
+        // MethodArgumentTypeMismatchException - extends MethodArgumentResolutionException > RuntimeException -
+        // Exception that indicates that a method argument has not the expected type.
 
-    // Exception - extends Throwable - The class Exception and its subclasses are a form of Throwable that indicates conditions that a reasonable application might want to catch.
+        // HttpMessageNotReadableException - extends HttpMessageConversionException > RuntimeException - Thrown by
+        // HttpMessageConverter implementations when the HttpMessageConverter.read(java.lang.Class<? extends T>,
+        // org.springframework.http.HttpInputMessage) method fails.
 
+        // TODO: Logging the exception message
+
+        System.out.println("handleBadRequest");
+        return new ResponseEntity<>("The path variable or request body is not formatted correctly", HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNoSuchElementException(Exception exception) {
+        // NoSuchElementException - extends RuntimeException - Thrown by various accessor methods to indicate that the
+        // element being requested does not exist.
+
+        // TODO: Logging the exception message
+
+        System.out.println("handleNoSuchElementException");
+        return new ResponseEntity<>("An object or object ID in your request does not exist", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<String> handleAuthenticationException(Exception exception) {
+        // AuthenticationException - extends RuntimeException - Abstract superclass for all exceptions related to an
+        // Authentication object being invalid for whatever reason.
+
+        // Also handling: BadCredentialsException, UsernameNotFoundException. They will fall through to here.
+
+        // TODO: Logging the exception message
+
+        System.out.println("handleAuthenticationException");
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(Exception exception) {
+        // RuntimeException - extends Exception - RuntimeException is the superclass of those exceptions that can be
+        // thrown during the normal operation of the Java Virtual Machine.
+
+        // Also handling: NullPointerException, IllegalArgumentException, JwtEncodingException. They will fall through to here.
+
+        // TODO: Logging the exception message
+
+        System.out.println("handleRuntimeException");
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAll(Exception exception) {
+        // Exception - extends Throwable - The class Exception and its subclasses are a form of Throwable
+        // that indicates conditions that a reasonable application might want to catch.
+
+        // Also handling: ServletException, IOException. They will fall through to here.
+
+        // TODO: Logging the exception message
+
+        System.out.println("handleAll");
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

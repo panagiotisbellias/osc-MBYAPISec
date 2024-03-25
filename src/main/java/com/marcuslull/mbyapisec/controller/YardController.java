@@ -22,9 +22,9 @@ public class YardController {
     }
 
     @GetMapping("/api/yard/{id}")
-    public ResponseEntity<YardDto> getYard(@PathVariable String id) {
+    public ResponseEntity<YardDto> getYard(@PathVariable Long id) {
         // NumberFormatException caught in GlobalExceptionHandler
-        return ResponseEntity.ok(yardService.getYard(Long.valueOf(id)));
+        return ResponseEntity.ok(yardService.getYard(id));
     }
 
     @PostMapping("/api/yards")
@@ -34,15 +34,14 @@ public class YardController {
     }
 
     @PutMapping("/api/yard/{id}")
-    public ResponseEntity<YardDto> putYard(@PathVariable String id, @RequestBody YardDto yardDto) {
+    public ResponseEntity<YardDto> putYard(@PathVariable Long id, @RequestBody YardDto yardDto) {
         // HttpMessageNotReadableException MethodArgumentConversionException NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(yardService.putYard(id, yardDto));
     }
 
     @DeleteMapping("/api/yard/{id}")
-    public ResponseEntity<String> deleteYard(@PathVariable String id) {
-        // NumberFormatException caught in GlobalExceptionHandler
-        yardService.deleteYard(Long.valueOf(id));
+    public ResponseEntity<String> deleteYard(@PathVariable Long id) {
+        yardService.deleteYard(id);
         return ResponseEntity.noContent().build();
     }
 }

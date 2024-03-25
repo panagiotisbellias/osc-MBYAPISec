@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class PlantService {
@@ -40,7 +41,7 @@ public class PlantService {
         Plant plant = plantRepository.findPlantByIdAndOwner(id, customAuthenticationProviderService.getAuthenticatedName());
         if (plant != null) {
             return mapperService.map(plant);
-        } else throw new RuntimeException(); // TODO: Custom Exception
+        } else throw new NoSuchElementException();
     }
 
     @Transactional

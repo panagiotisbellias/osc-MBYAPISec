@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class NoteService {
@@ -22,10 +23,9 @@ public class NoteService {
         this.customAuthenticationProviderService = customAuthenticationProviderService;
     }
 
-    public List<NoteDto> getNotesForYard(String yardId) {
+    public List<NoteDto> getNotesForYard(Long yardId) {
         List<NoteDto> noteDtos = new ArrayList<>();
-        noteRepository.findNotesByOwnerAndYardId(customAuthenticationProviderService.getAuthenticatedName(),
-                        Long.valueOf(yardId)) // NumberFormatException caught in the GlobalExceptionHandler
+        noteRepository.findNotesByOwnerAndYardId(customAuthenticationProviderService.getAuthenticatedName(), yardId)
                 .forEach(note -> {
                     NoteDto noteDto = mapperService.map(note);
                     noteDtos.add(noteDto);
@@ -33,12 +33,11 @@ public class NoteService {
         return noteDtos;
     }
 
-    public NoteDto getNote(String id) {
-        Note note = noteRepository.findNoteByOwnerAndId(customAuthenticationProviderService.getAuthenticatedName(),
-                Long.valueOf(id)); // NumberFormatException caught in the GlobalExceptionHandler
+    public NoteDto getNote(Long id) {
+        Note note = noteRepository.findNoteByOwnerAndId(customAuthenticationProviderService.getAuthenticatedName(), id);
         if (note != null) {
             return mapperService.map(note);
-        } else throw new RuntimeException(); //TODO: Custom Exception
+        } else throw new NoSuchElementException();
     }
 
     public NoteDto postNote(NoteDto noteDto) {
@@ -46,21 +45,20 @@ public class NoteService {
         return mapperService.map(noteRepository.save(mapperService.map(noteDto)));
     }
 
-    public NoteDto putNote(String noteId, NoteDto noteDto) {
+    public NoteDto putNote(Long noteId, NoteDto noteDto) {
         // it's just the comment that might be changing - this can also double as a PATCH
-        noteDto.setId(Long.valueOf(noteId)); // NumberFormatException caught in the GlobalExceptionHandler
+        noteDto.setId(noteId);
         noteDto.setOwner(customAuthenticationProviderService.getAuthenticatedName());
         Note oldNote = noteRepository.findNoteByOwnerAndId(noteDto.getOwner(), noteDto.getId());
         if (oldNote != null) {
             noteDto.setYardId(oldNote.getYard().getId());
             noteDto.setCreated(oldNote.getCreated());
             return mapperService.map(noteRepository.save(mapperService.map(noteDto)));
-        } else throw new RuntimeException(); //TODO: Custom Exception
+        } else throw new NoSuchElementException();
     }
 
     @Transactional
-    public void deleteNote(String id) {
-        // NumberFormatException caught in the GlobalExceptionHandler
-        noteRepository.deleteNoteByIdAndOwner(Long.valueOf(id), customAuthenticationProviderService.getAuthenticatedName());
+    public void deleteNote(Long id) {
+        noteRepository.deleteNoteByIdAndOwner(id, customAuthenticationProviderService.getAuthenticatedName());
     }
 }

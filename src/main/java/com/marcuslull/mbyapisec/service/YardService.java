@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class YardService {
@@ -35,7 +36,7 @@ public class YardService {
         Yard yard = yardRepository.findYardByIdAndUserEmail(id, customAuthenticationProviderService.getAuthenticatedName());
         if (yard != null) {
             return mapperService.map(yard);
-        } else throw new RuntimeException(); // TODO: Custom Exception
+        } else throw new NoSuchElementException();
     }
 
     public YardDto postYard(YardDto yardDto) {
@@ -43,8 +44,8 @@ public class YardService {
         return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
     }
 
-    public YardDto putYard(String id, YardDto yardDto) {
-        yardDto.setId(Long.valueOf(id)); // NumberFormatException caught in the GlobalExceptionHandler
+    public YardDto putYard(Long id, YardDto yardDto) {
+        yardDto.setId(id);
         yardDto.setUserEmail(customAuthenticationProviderService.getAuthenticatedName());
         Yard yard = yardRepository.findYardByIdAndUserEmail(yardDto.getId(), yardDto.getUserEmail());
         if (yard != null) {
@@ -62,7 +63,7 @@ public class YardService {
             yardDto.setNoteIds(notes);
 
             return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
-        } else throw new RuntimeException(); // TODO: Custom Exception
+        } else throw new NoSuchElementException();
     }
 
     @Transactional

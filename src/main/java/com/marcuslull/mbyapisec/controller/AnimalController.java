@@ -22,9 +22,9 @@ public class AnimalController {
     }
 
     @GetMapping("/api/animal/{id}")
-    public ResponseEntity<AnimalDto> getAnimal(@PathVariable String id) {
+    public ResponseEntity<AnimalDto> getAnimal(@PathVariable Long id) {
         // NumberFormatException caught in GlobalExceptionHandler
-        AnimalDto animalDto = animalService.getAnimal(Long.valueOf(id));
+        AnimalDto animalDto = animalService.getAnimal(id);
         return ResponseEntity.ok(animalDto);
     }
 
@@ -35,9 +35,9 @@ public class AnimalController {
     }
 
     @DeleteMapping("/api/animal/{id}")
-    public ResponseEntity<String> deleteAnimal(@PathVariable String id) {
+    public ResponseEntity<String> deleteAnimal(@PathVariable Long id) {
         // NumberFormatException caught in GlobalExceptionHandler
-        animalService.deleteAnimal(Long.valueOf(id));
+        animalService.deleteAnimal(id);
         return ResponseEntity.noContent().build();
     }
 }

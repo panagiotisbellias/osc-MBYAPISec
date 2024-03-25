@@ -8,6 +8,7 @@ import com.marcuslull.mbyapisec.model.entity.*;
 import com.marcuslull.mbyapisec.repository.*;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,7 +74,7 @@ public class MapperService {
                         customAuthenticationProviderService.getAuthenticatedName());
                 if (yard != null) {
                     note.setYard(yard);
-                } else throw new RuntimeException(); // TODO: Custom Exception
+                } else throw new NoSuchElementException();
             }
             return note;
         }
@@ -108,7 +109,7 @@ public class MapperService {
                         customAuthenticationProviderService.getAuthenticatedName());
                 if (yard != null) {
                     animal.setYard(yard);
-                } else throw new RuntimeException(); // TODO: Custom Exception
+                } else throw new NoSuchElementException();
             }
             return animal;
         }
@@ -149,7 +150,7 @@ public class MapperService {
                         customAuthenticationProviderService.getAuthenticatedName());
                 if (yard != null) {
                     plant.setYard(yard);
-                } else throw new RuntimeException(); // TODO: Custom Exception
+                } else throw new NoSuchElementException();
             }
             return plant;
         }
@@ -193,7 +194,7 @@ public class MapperService {
             User user = userRepository.findUserByEmail(yardDto.getUserEmail());
             if (user != null) {
                 yard.setUser(user);
-            } else throw new RuntimeException(); // TODO: Custom Exception
+            } else throw new NoSuchElementException();
             return yard;
         }
     }
