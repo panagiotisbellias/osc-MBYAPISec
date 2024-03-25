@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 public class NoteController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final NoteService noteService;
 
     public NoteController(NoteService noteService) {
@@ -16,35 +17,31 @@ public class NoteController {
     }
 
     @GetMapping("/api/yard/{id}/notes")
-    public ResponseEntity<List<NoteDto>> getNotesForYard(@PathVariable String id) {
+    public ResponseEntity<List<NoteDto>> getNotesForYard(@PathVariable Long id) {
+        // NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(noteService.getNotesForYard(id));
     }
 
     @GetMapping("/api/note/{id}")
-    public ResponseEntity<NoteDto> getNote(@PathVariable String id) {
-        NoteDto returnedNoteDto = noteService.getNote(id);
-        if (returnedNoteDto == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<NoteDto> getNote(@PathVariable Long id) {
+        // NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(noteService.getNote(id));
     }
 
     @PostMapping("/api/notes")
     public ResponseEntity<NoteDto> postNote(@RequestBody NoteDto noteDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return ResponseEntity.ok(noteService.postNote(noteDto));
     }
 
     @PutMapping("/api/note/{id}")
-    public ResponseEntity<NoteDto> putNote(@PathVariable String id, @RequestBody NoteDto noteDto) {
-        NoteDto returnedNoteDto = noteService.putNote(id, noteDto);
-        if (returnedNoteDto == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(returnedNoteDto);
+    public ResponseEntity<NoteDto> putNote(@PathVariable Long id, @RequestBody NoteDto noteDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(noteService.putNote(id, noteDto));
     }
 
     @DeleteMapping("/api/note/{id}")
-    public ResponseEntity<String> deleteNote(@PathVariable String id) {
+    public ResponseEntity<String> deleteNote(@PathVariable Long id) {
         noteService.deleteNote(id);
         return ResponseEntity.noContent().build();
     }

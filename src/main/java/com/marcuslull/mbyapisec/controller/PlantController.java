@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 public class PlantController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final PlantService plantService;
 
     public PlantController(PlantService plantService) {
@@ -21,22 +22,20 @@ public class PlantController {
     }
 
     @GetMapping("/api/plant/{id}")
-    public ResponseEntity<PlantDto> getPlant(@PathVariable String id) {
-        PlantDto plantDto = plantService.getPlant(Long.valueOf(id));
-        if (plantDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(plantDto);
+    public ResponseEntity<PlantDto> getPlant(@PathVariable Long id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(plantService.getPlant(id));
     }
 
     @PostMapping("/api/plants")
     public ResponseEntity<PlantDto> postPlants(@RequestBody PlantDto plantDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return ResponseEntity.ok(plantService.postPlant(plantDto));
     }
 
     @DeleteMapping("/api/plant/{id}")
-    public ResponseEntity<String> deletePlant(@PathVariable String id) {
-        plantService.deletePlant(Long.valueOf(id));
+    public ResponseEntity<String> deletePlant(@PathVariable Long id) {
+        plantService.deletePlant(id);
         return ResponseEntity.noContent().build();
     }
 }

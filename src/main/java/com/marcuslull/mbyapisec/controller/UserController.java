@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {

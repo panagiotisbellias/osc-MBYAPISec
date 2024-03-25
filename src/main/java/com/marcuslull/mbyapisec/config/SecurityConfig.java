@@ -40,7 +40,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception { // Caught in GlobalException Handler
         return httpSecurity
                 .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override
@@ -73,13 +73,19 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build();
+        if (rsaKeyProperties.publicKey() != null) {
+            return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build();
+        }
+        throw new RuntimeException("jwtDecoder says: Missing RSA key");
     }
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey()).privateKey(rsaKeyProperties.privateKey()).build();
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
+        if (rsaKeyProperties.publicKey() != null && rsaKeyProperties.privateKey() != null) {
+            JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey()).privateKey(rsaKeyProperties.privateKey()).build();
+            JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+            return new NimbusJwtEncoder(jwks);
+        }
+        throw new RuntimeException("jwtEncoder says: Missing RSA key");
     }
 }

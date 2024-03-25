@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 public class YardController {
+    // All NULLs are thrown to GlobalExceptionHandler at the service layer
     private final YardService yardService;
 
     public YardController(YardService yardService) {
@@ -21,31 +22,26 @@ public class YardController {
     }
 
     @GetMapping("/api/yard/{id}")
-    public ResponseEntity<YardDto> getYard(@PathVariable String id) {
-        YardDto yardDto = yardService.getYard(Long.valueOf(id));
-        if (yardDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(yardDto);
+    public ResponseEntity<YardDto> getYard(@PathVariable Long id) {
+        // NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(yardService.getYard(id));
     }
 
     @PostMapping("/api/yards")
     public ResponseEntity<YardDto> postYards(@RequestBody YardDto yardDto) {
+        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return ResponseEntity.ok(yardService.postYard(yardDto));
     }
 
     @PutMapping("/api/yard/{id}")
-    public ResponseEntity<YardDto> putYard(@PathVariable String id, @RequestBody YardDto yardDto) {
-        YardDto returnedYard = yardService.putYard(id, yardDto);
-        if (returnedYard != null) {
-            return ResponseEntity.ok(returnedYard);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<YardDto> putYard(@PathVariable Long id, @RequestBody YardDto yardDto) {
+        // HttpMessageNotReadableException MethodArgumentConversionException NumberFormatException caught in GlobalExceptionHandler
+        return ResponseEntity.ok(yardService.putYard(id, yardDto));
     }
 
     @DeleteMapping("/api/yard/{id}")
-    public ResponseEntity<String> deleteYard(@PathVariable String id) {
-        yardService.deleteYard(Long.valueOf(id));
+    public ResponseEntity<String> deleteYard(@PathVariable Long id) {
+        yardService.deleteYard(id);
         return ResponseEntity.noContent().build();
     }
 }

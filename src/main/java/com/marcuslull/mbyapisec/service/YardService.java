@@ -3,26 +3,28 @@ package com.marcuslull.mbyapisec.service;
 import com.marcuslull.mbyapisec.model.dto.YardDto;
 import com.marcuslull.mbyapisec.model.entity.Yard;
 import com.marcuslull.mbyapisec.repository.YardRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class YardService {
     private final YardRepository yardRepository;
     private final MapperService mapperService;
+    private final CustomAuthenticationProviderService customAuthenticationProviderService;
 
-    public YardService(YardRepository yardRepository, MapperService mapperService) {
+    public YardService(YardRepository yardRepository, MapperService mapperService, CustomAuthenticationProviderService customAuthenticationProviderService) {
         this.yardRepository = yardRepository;
         this.mapperService = mapperService;
+        this.customAuthenticationProviderService = customAuthenticationProviderService;
     }
 
     public List<YardDto> getYards() {
         List<YardDto> yardDtos = new ArrayList<>();
-        yardRepository.findYardsByUserEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+        yardRepository.findYardsByUserEmail(customAuthenticationProviderService.getAuthenticatedName())
                 .forEach(yard -> {
                     YardDto yardDto = mapperService.map(yard);
                     yardDtos.add(yardDto);
@@ -31,21 +33,20 @@ public class YardService {
     }
 
     public YardDto getYard(Long id) {
-        Yard yard = yardRepository.findYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
+        Yard yard = yardRepository.findYardByIdAndUserEmail(id, customAuthenticationProviderService.getAuthenticatedName());
         if (yard != null) {
             return mapperService.map(yard);
-        }
-        return null;
+        } else throw new NoSuchElementException();
     }
 
     public YardDto postYard(YardDto yardDto) {
-        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        yardDto.setUserEmail(customAuthenticationProviderService.getAuthenticatedName());
         return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
     }
 
-    public YardDto putYard(String id, YardDto yardDto) {
-        yardDto.setId(Long.valueOf(id));
-        yardDto.setUserEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+    public YardDto putYard(Long id, YardDto yardDto) {
+        yardDto.setId(id);
+        yardDto.setUserEmail(customAuthenticationProviderService.getAuthenticatedName());
         Yard yard = yardRepository.findYardByIdAndUserEmail(yardDto.getId(), yardDto.getUserEmail());
         if (yard != null) {
             yardDto.setCreated(yard.getCreated());
@@ -62,14 +63,11 @@ public class YardService {
             yardDto.setNoteIds(notes);
 
             return mapperService.map(yardRepository.save(mapperService.map(yardDto)));
-        }
-        return null;
+        } else throw new NoSuchElementException();
     }
 
     @Transactional
     public void deleteYard(Long id) {
-        if (yardRepository.existsById(id)) {
-            yardRepository.deleteYardByIdAndUserEmail(id, SecurityContextHolder.getContext().getAuthentication().getName());
-        }
+        yardRepository.deleteYardByIdAndUserEmail(id, customAuthenticationProviderService.getAuthenticatedName());
     }
 }
