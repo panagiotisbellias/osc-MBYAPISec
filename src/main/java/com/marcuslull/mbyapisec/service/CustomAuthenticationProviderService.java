@@ -45,6 +45,7 @@ public class CustomAuthenticationProviderService implements AuthenticationProvid
         if (authentication != null) {
             return authentication.getName();
         } else
-            throw new RuntimeException("AnimalService:getAuthenticatedName() says: authentication is null - No authentication info is available");
+            throw new RuntimeException("CustomAuthenticationProviderService:getAuthenticatedName() says: authentication " +
+                    "is null - No authentication info is available");
     }
 }
