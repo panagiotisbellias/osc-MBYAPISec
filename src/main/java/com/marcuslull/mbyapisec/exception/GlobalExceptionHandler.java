@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
 
         // TODO: Logging the exception message
 
-        System.out.println("handleAll");
+        System.out.println(exception);
         return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
