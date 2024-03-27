@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
         // TODO: Logging the exception message
 
-        System.out.println("handleUserRegistrationExceptions");
+        System.out.println(exception);
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
 
         // TODO: Logging the exception message
 
-        System.out.println("handleBadRequest");
+        System.out.println(exception);
         return new ResponseEntity<>("The path variable or request body is not formatted correctly", HttpStatus.BAD_REQUEST);
     }
 
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
 
         // TODO: Logging the exception message
 
-        System.out.println("handleNoSuchElementException");
+        System.out.println(exception);
         return new ResponseEntity<>("An object or object ID in your request does not exist", HttpStatus.BAD_REQUEST);
     }
 
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
 
         // TODO: Logging the exception message
 
-        System.out.println("handleAuthenticationException");
+        System.out.println(exception);
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
 
         // TODO: Logging the exception message
 
-        System.out.println("handleRuntimeException");
+        System.out.println(exception);
         return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
