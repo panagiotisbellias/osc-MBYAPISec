@@ -1,11 +1,13 @@
 package com.marcuslull.mbyapisec.service;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,9 +50,18 @@ class CustomAuthenticationProviderServiceTest {
     @InjectMocks
     private CustomAuthenticationProviderService customAuthenticationProviderService;
 
+    private static MockedStatic<SecurityContextHolder> mockedStatic;
+
     @BeforeAll
     static void setUp() {
-        mockStatic(SecurityContextHolder.class);
+        mockedStatic = mockStatic(SecurityContextHolder.class);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        if (mockedStatic.isClosed()) {
+            mockedStatic.close();
+        }
     }
 
     @Test

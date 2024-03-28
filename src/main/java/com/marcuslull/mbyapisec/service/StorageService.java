@@ -12,12 +12,12 @@ import java.nio.file.*;
 import java.util.Objects;
 
 @Service
-public class FileSystemStorageService {
+public class StorageService {
     private final CustomAuthenticationProviderService customAuthenticationProviderService;
     private final UserRepository userRepository;
     private final Path rootLocation;
 
-    public FileSystemStorageService(
+    public StorageService(
             StorageProperties storageProperties,
             CustomAuthenticationProviderService customAuthenticationProviderService,
             UserRepository userRepository)
@@ -26,23 +26,23 @@ public class FileSystemStorageService {
         this.userRepository = userRepository;
 
         if (!storageProperties.location().trim().isEmpty()) {
-            this.rootLocation = Paths.get(storageProperties.location()); // TODO: handle this
-        } else throw new RuntimeException("File cannot be empty"); // TODO: handle this
+            this.rootLocation = Paths.get(storageProperties.location());
+        } else throw new RuntimeException("StorageService:Constructor says - File cannot be empty");
     }
 
-    public void store(MultipartFile multipartFile) throws IOException { // TODO: handle this
-        Path destinationUserPath = Paths.get(Objects.requireNonNull(setUserPath())); // TODO: handle this
+    public void store(MultipartFile multipartFile) throws IOException {
+        Path destinationUserPath = Paths.get(Objects.requireNonNull(setUserPath()));
         // add the root location to the user folder to the original file name
         Path destinationFile = this.rootLocation
                 .resolve(destinationUserPath)
-                .resolve(Paths.get(Objects.requireNonNull(multipartFile.getOriginalFilename()))) // TODO: handle this
+                .resolve(Paths.get(Objects.requireNonNull(multipartFile.getOriginalFilename())))
                 .normalize()
                 .toAbsolutePath();
         InputStream inputStream = multipartFile.getInputStream();
-        if (!Files.exists(this.rootLocation.resolve(destinationUserPath))) { // TODO: handle this
-            Files.createDirectories(this.rootLocation.resolve(destinationUserPath)); // TODO: handle this
+        if (!Files.exists(this.rootLocation.resolve(destinationUserPath))) {
+            Files.createDirectories(this.rootLocation.resolve(destinationUserPath));
         }
-        Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING); // TODO: handle this
+        Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
     }
 
     private String setUserPath() {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.io.IOError;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -57,10 +58,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("An object or object ID in your request does not exist", HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler({AuthenticationException.class, SecurityException.class})
     public ResponseEntity<String> handleAuthenticationException(Exception exception) {
         // AuthenticationException - extends RuntimeException - Abstract superclass for all exceptions related to an
         // Authentication object being invalid for whatever reason.
+
+        // SecurityException - extends RuntimeException - Thrown by the security manager to indicate a security violation.
 
         // Also handling: BadCredentialsException, UsernameNotFoundException. They will fall through to here.
 
@@ -75,7 +78,7 @@ public class GlobalExceptionHandler {
         // RuntimeException - extends Exception - RuntimeException is the superclass of those exceptions that can be
         // thrown during the normal operation of the Java Virtual Machine.
 
-        // Also handling: NullPointerException, IllegalArgumentException, JwtEncodingException. They will fall through to here.
+        // Also handling: NullPointerException, UnsupportedOperationException, InvalidPathException, IllegalArgumentException, JwtEncodingException. They will fall through to here.
 
         // TODO: Logging the exception message
 
@@ -84,11 +87,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAll(Exception exception) {
+    public ResponseEntity<String> handleException (Exception exception) {
         // Exception - extends Throwable - The class Exception and its subclasses are a form of Throwable
         // that indicates conditions that a reasonable application might want to catch.
 
         // Also handling: ServletException, IOException. They will fall through to here.
+
+        // TODO: Logging the exception message
+
+        System.out.println(exception);
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IOError.class)
+    public ResponseEntity<String> handleIOError(Exception exception) {
+        // IOError - extends Error > Throwable - Thrown when a serious I/O error has occurred.
 
         // TODO: Logging the exception message
 
