@@ -10,6 +10,9 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * DTO for {@link com.marcuslull.mbyapisec.model.entity.Animal}
+ */
 @Getter
 @Setter
 @ToString

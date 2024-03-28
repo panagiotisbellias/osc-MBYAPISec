@@ -1,5 +1,6 @@
 package com.marcuslull.mbyapisec.service;
 
+import com.marcuslull.mbyapisec.model.entity.User;
 import com.marcuslull.mbyapisec.model.record.StorageProperties;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import org.junit.jupiter.api.AfterAll;

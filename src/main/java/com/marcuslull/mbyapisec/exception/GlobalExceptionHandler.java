@@ -87,11 +87,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException (Exception exception) {
+    public ResponseEntity<String> handleException(Exception exception) {
         // Exception - extends Throwable - The class Exception and its subclasses are a form of Throwable
         // that indicates conditions that a reasonable application might want to catch.
 
-        // Also handling: ServletException, IOException. They will fall through to here.
+        // Also handling: ServletException, IOException, MalformedURLException. They will fall through to here.
 
         // TODO: Logging the exception message
 

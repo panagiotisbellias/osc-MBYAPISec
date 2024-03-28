@@ -10,6 +10,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * DTO for {@link com.marcuslull.mbyapisec.model.entity.Yard}
+ */
 @Getter
 @Setter
 @ToString

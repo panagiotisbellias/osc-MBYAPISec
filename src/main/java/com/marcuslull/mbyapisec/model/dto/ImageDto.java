@@ -2,22 +2,22 @@ package com.marcuslull.mbyapisec.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link com.marcuslull.mbyapisec.model.entity.Note}
+ * DTO for {@link com.marcuslull.mbyapisec.model.entity.Image}
  */
 @Getter
 @Setter
-@ToString
-public class NoteDto implements Serializable {
+public class ImageDto implements Serializable {
     private Long id;
     private LocalDateTime created;
     private LocalDateTime updated;
-    private String owner;
-    private String comment;
+    private Long ownerId;
+    private String fileName;
+    private Long fileSize;
+    private String path;
     private Long yardId;
 }
