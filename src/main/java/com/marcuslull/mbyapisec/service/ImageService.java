@@ -7,10 +7,12 @@ import com.marcuslull.mbyapisec.model.record.StorageProperties;
 import com.marcuslull.mbyapisec.repository.ImageRepository;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import com.marcuslull.mbyapisec.repository.YardRepository;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,10 +75,11 @@ public class ImageService {
         } else return new ArrayList<>();
     }
 
-    private boolean authCheck(List<Image> imageList) {
-        // temp helper till I can switch to userId based principal
-        return imageList.stream().allMatch(image -> image.getOwnerId()
-                .equals(userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName())
-                        .getId()));
+    public Resource getImage(Long imageId) throws MalformedURLException {
+        User user = userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName());
+        Image image = imageRepository.findById(imageId).get();
+        if (user.getId().equals(image.getOwnerId())) {
+            return storageService.retrieve(image.getFileName(), image.getOwnerId());
+        } else throw new SecurityException("user and image owner dont match up");
     }
 }

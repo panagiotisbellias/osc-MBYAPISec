@@ -2,6 +2,7 @@ package com.marcuslull.mbyapisec.controller;
 
 import com.marcuslull.mbyapisec.model.dto.ImageDto;
 import com.marcuslull.mbyapisec.service.ImageService;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Controller
@@ -29,7 +31,11 @@ public class ImageController {
         return ResponseEntity.ok().body(images);
     }
 
-    // TODO: GET mapping for single image - this will get hit multiple times to return all images for an entity.
+    @GetMapping("/api/image/{imageId}")
+    public ResponseEntity<Resource> getImage(@PathVariable Long imageId) throws MalformedURLException {
+        Resource resource = imageService.getImage(imageId);
+        return ResponseEntity.ok().body(resource);
+    }
 
     @PostMapping("/api/{entity}/{id}/images")
     public ResponseEntity<String> postUpload(
