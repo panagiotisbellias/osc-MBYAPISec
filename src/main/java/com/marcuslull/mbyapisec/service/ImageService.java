@@ -77,7 +77,7 @@ public class ImageService {
 
     public Resource getImage(Long imageId) throws MalformedURLException {
         User user = userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName());
-        Image image = imageRepository.findById(imageId).get();
+        Image image = imageRepository.findById(imageId).orElseThrow(() -> new RuntimeException("No image found"));
         if (user.getId().equals(image.getOwnerId())) {
             return storageService.retrieve(image.getFileName(), image.getOwnerId());
         } else throw new SecurityException("user and image owner dont match up");
