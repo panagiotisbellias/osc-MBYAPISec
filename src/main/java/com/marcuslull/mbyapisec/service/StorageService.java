@@ -1,9 +1,6 @@
 package com.marcuslull.mbyapisec.service;
 
 import com.marcuslull.mbyapisec.model.record.StorageProperties;
-import com.marcuslull.mbyapisec.repository.ImageRepository;
-import com.marcuslull.mbyapisec.repository.UserRepository;
-import com.marcuslull.mbyapisec.repository.YardRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;

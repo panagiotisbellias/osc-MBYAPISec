@@ -1,8 +1,7 @@
 package com.marcuslull.mbyapisec.controller;
 
+import com.marcuslull.mbyapisec.model.dto.ImageDto;
 import com.marcuslull.mbyapisec.service.ImageService;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,11 +23,13 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @GetMapping("/api/{entity}/{id}/images")
-    public ResponseEntity<Resource> getAllImagesForEntity(@PathVariable String entity, @PathVariable Long id) {
-        List<Resource> images = imageService.getAllImageForEntity(entity, id);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + images.getFirst().getFilename()).body(images.getFirst());
+    @GetMapping("/api/{entity}/{entityId}/images")
+    public ResponseEntity<List<ImageDto>> getAllImageData(@PathVariable String entity, @PathVariable Long entityId) {
+        List<ImageDto> images = imageService.getImageDataForEntity(entity, entityId);
+        return ResponseEntity.ok().body(images);
     }
+
+    // TODO: GET mapping for single image - this will get hit multiple times to return all images for an entity.
 
     @PostMapping("/api/{entity}/{id}/images")
     public ResponseEntity<String> postUpload(

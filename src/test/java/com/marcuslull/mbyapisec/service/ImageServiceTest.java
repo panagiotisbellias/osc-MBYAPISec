@@ -40,7 +40,7 @@ class ImageServiceTest {
         when(imageRepository.findImagesByOwnerIdAndYardId(1L, 1L)).thenReturn(new ArrayList<>());
 
         // act
-        imageService.getAllImageForEntity("yard", 1L);
+        imageService.getImageDataForEntity("yard", 1L);
 
         // assert
         verify(imageRepository, atLeastOnce()).findImagesByOwnerIdAndYardId(anyLong(), anyLong());
@@ -54,6 +54,6 @@ class ImageServiceTest {
         when(userRepository.findUserByEmail("owner")).thenReturn(user);
 
         // act & assert
-        assertThrows(RuntimeException.class, () -> imageService.getAllImageForEntity("invalid", 1L));
+        assertThrows(RuntimeException.class, () -> imageService.getImageDataForEntity("invalid", 1L));
     }
 }

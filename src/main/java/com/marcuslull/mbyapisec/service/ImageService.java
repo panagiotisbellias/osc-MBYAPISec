@@ -7,15 +7,12 @@ import com.marcuslull.mbyapisec.model.record.StorageProperties;
 import com.marcuslull.mbyapisec.repository.ImageRepository;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import com.marcuslull.mbyapisec.repository.YardRepository;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ImageService {
@@ -25,15 +22,17 @@ public class ImageService {
     private final StorageService storageService;
     private final YardRepository yardRepository;
     private final StorageProperties storageProperties;
+    private final MapperService mapperService;
 
     public ImageService(UserRepository userRepository, ImageRepository imageRepository, CustomAuthenticationProviderService customAuthenticationProviderService, StorageService storageService,
-                        YardRepository yardRepository, StorageProperties storageProperties) {
+                        YardRepository yardRepository, StorageProperties storageProperties, MapperService mapperService) {
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
         this.customAuthenticationProviderService = customAuthenticationProviderService;
         this.storageService = storageService;
         this.yardRepository = yardRepository;
         this.storageProperties = storageProperties;
+        this.mapperService = mapperService;
     }
 
     public void postImage(String entity, Long entityId, MultipartFile multipartFile) throws IOException {
@@ -58,25 +57,26 @@ public class ImageService {
         } else throw new RuntimeException("StorageService:postImageForEntity says - User is not in the DB");
     }
 
-    public List<Resource> getAllImageForEntity(String entity, Long entityId) {
-        User user = userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName());
-        if (user != null) {
-            return switch (entity.toLowerCase()) {
-                case "yard" -> getImageFilesForYard(entityId, user.getId());
-                case "plant", "animal" -> new ArrayList<>();
-                default -> throw new RuntimeException("StorageService:getAllForEntity says - entity is not valid");
-            };
-        } else throw new RuntimeException("StorageService:getAllForEntity says - User is not in the DB");
+    public List<ImageDto> getImageDataForEntity(String entity, Long entityId) {
+        return switch (entity.toLowerCase()) {
+            case "yard" -> getImageDataForYard(entityId);
+            case "plant", "animal" -> new ArrayList<>();
+            default -> throw new RuntimeException("StorageService:getAllForEntity says - entity is not valid");
+        };
     }
 
-    private List<Resource> getImageFilesForYard(Long entityId, Long ownerId) {
-        List<Image> imageList = imageRepository.findImagesByOwnerIdAndYardId(ownerId, entityId);
-        return imageList.stream().map(image -> {
-            try {
-                return storageService.retrieve(image.getFileName(), ownerId);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException("ImageService:getImageFilesForYard says - Malformed URL");
-            }
-        }).collect(Collectors.toList());
+    private List<ImageDto> getImageDataForYard(Long yardId) {
+        User user = userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName());
+        List<Image> imageList = imageRepository.findImagesByOwnerIdAndYardId(user.getId(), yardId);
+        if (imageList != null) {
+            return imageList.stream().map(image -> ((ImageDto) mapperService.map(image))).toList();
+        } else return new ArrayList<>();
+    }
+
+    private boolean authCheck(List<Image> imageList) {
+        // temp helper till I can switch to userId based principal
+        return imageList.stream().allMatch(image -> image.getOwnerId()
+                .equals(userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName())
+                        .getId()));
     }
 }
