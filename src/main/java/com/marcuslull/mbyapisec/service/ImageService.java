@@ -55,7 +55,7 @@ public class ImageService {
             image.setFileSize(multipartFile.getSize());
             image.setOwnerId(user.getId());
             image.setPath(storageProperties.location() + user.getId() + "/" + multipartFile.getOriginalFilename());
-            imageRepository.save(image);
+            imageRepository.save(image); // TODO: This should return to the controller
         } else throw new RuntimeException("StorageService:postImageForEntity says - User is not in the DB");
     }
 
