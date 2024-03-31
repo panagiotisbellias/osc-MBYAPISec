@@ -2,7 +2,6 @@ package com.marcuslull.mbyapisec.service;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,36 +20,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CustomAuthenticationProviderServiceTest {
 
+    private static MockedStatic<SecurityContextHolder> mockedStatic;
     @Mock
     private UserService userService;
-
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private Authentication authentication;
-
     @Mock
     private GrantedAuthority grantedAuthority;
-
     @Mock
     private Object object;
-
     @Mock
     private SecurityContext securityContext;
-
     @InjectMocks
     private CustomAuthenticationProviderService customAuthenticationProviderService;
-
-    private static MockedStatic<SecurityContextHolder> mockedStatic;
 
     @BeforeAll
     static void setUp() {
@@ -68,7 +62,7 @@ class CustomAuthenticationProviderServiceTest {
     void authenticateSuccess() {
         // Arrange
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken("name","password", List.of(grantedAuthority));
+                new UsernamePasswordAuthenticationToken("name", "password", List.of(grantedAuthority));
         UserDetails userDetails = new User("name", "password", List.of(grantedAuthority));
         when(authentication.getName()).thenReturn("name");
         when(authentication.getCredentials()).thenReturn(object);
@@ -99,7 +93,7 @@ class CustomAuthenticationProviderServiceTest {
     void authenticateFailurePassword() {
         // Arrange
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken("name","password", List.of(grantedAuthority));
+                new UsernamePasswordAuthenticationToken("name", "password", List.of(grantedAuthority));
         UserDetails userDetails = new User("name", "password", List.of(grantedAuthority));
         when(authentication.getName()).thenReturn("name");
         when(authentication.getCredentials()).thenReturn(object);

@@ -15,21 +15,23 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ImageServiceTest {
 
+    @Mock
+    Resource resource;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -44,8 +46,6 @@ class ImageServiceTest {
     private StorageProperties storageProperties;
     @Mock
     private MapperService mapperService;
-    @Mock Resource resource;
-
     @InjectMocks
     private ImageService imageService;
 
@@ -146,7 +146,7 @@ class ImageServiceTest {
         List<ImageDto> result = imageService.getImageDataForEntity("yard", 1L);
 
         // assert
-        assert(result.isEmpty());
+        assert (result.isEmpty());
     }
 
     @Test
@@ -178,7 +178,7 @@ class ImageServiceTest {
         when(imageRepository.findById(1L)).thenReturn(null);
 
         // act & assert
-        assertThrows(RuntimeException.class, () ->imageService.getImage(1L));
+        assertThrows(RuntimeException.class, () -> imageService.getImage(1L));
     }
 
     @Test

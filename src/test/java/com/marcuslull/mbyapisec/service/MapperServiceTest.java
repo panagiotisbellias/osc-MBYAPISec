@@ -1,9 +1,6 @@
 package com.marcuslull.mbyapisec.service;
 
-import com.marcuslull.mbyapisec.model.dto.AnimalDto;
-import com.marcuslull.mbyapisec.model.dto.NoteDto;
-import com.marcuslull.mbyapisec.model.dto.PlantDto;
-import com.marcuslull.mbyapisec.model.dto.YardDto;
+import com.marcuslull.mbyapisec.model.dto.*;
 import com.marcuslull.mbyapisec.model.entity.*;
 import com.marcuslull.mbyapisec.repository.*;
 import org.junit.jupiter.api.Test;
@@ -21,27 +18,77 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MapperServiceTest {
-
     @Mock
     private PlantRepository plantRepository;
-
     @Mock
     private AnimalRepository animalRepository;
-
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private YardRepository yardRepository;
-
     @Mock
     private NoteRepository noteRepository;
-
     @Mock
     private CustomAuthenticationProviderService customAuthenticationProviderService;
 
     @InjectMocks
     private MapperService mapperService;
+
+    @Test
+    void mapImageAndImageDto() {
+        // Arrange
+        Long id = 1L;
+        Image image = new Image();
+        image.setId(id);
+        Yard yard = new Yard();
+        yard.setId(id);
+        image.setYard(yard);
+        User user = new User();
+        user.setId(id);
+
+        ImageDto imageDto = new ImageDto();
+        imageDto.setYardId(id);
+        imageDto.setId(id);
+        Yard yard1 = new Yard();
+        yard1.setId(id);
+        Image image1 = new Image();
+        image1.setYard(yard);
+
+        when(customAuthenticationProviderService.getAuthenticatedName()).thenReturn("owner");
+        when(userRepository.findUserByEmail("owner")).thenReturn(user);
+        when(yardRepository.findYardByIdAndUserEmail(1L, "owner")).thenReturn(yard);
+
+        // Act
+        ImageDto resultImageDto = mapperService.map(image);
+        Image resultImage = mapperService.map(imageDto);
+
+
+        // Assert
+        assertAll(
+                () -> assertEquals(id, resultImageDto.getId()),
+                () -> assertEquals(id, resultImageDto.getYardId())
+        );
+        assertAll(
+                () -> assertEquals(id, resultImage.getId()),
+                () -> assertEquals(image1.getYard(), resultImage.getYard())
+        );
+        verify(userRepository, atLeastOnce()).findUserByEmail("owner");
+        verify(yardRepository, times(1)).findYardByIdAndUserEmail(id, "owner");
+    }
+
+    @Test
+    void mapImageNullCase() {
+        // Arrange
+        Long id = 1L;
+        ImageDto imageDto = new ImageDto();
+        imageDto.setYardId(id);
+        imageDto.setOwnerId(id);
+        when(customAuthenticationProviderService.getAuthenticatedName()).thenReturn("owner");
+        when(yardRepository.findYardByIdAndUserEmail(id, "owner")).thenReturn(null);
+
+        // Act & Assert
+        assertThrows(NoSuchElementException.class, () -> mapperService.map(imageDto));
+    }
 
     @Test
     void mapNoteAndNoteDto() {
