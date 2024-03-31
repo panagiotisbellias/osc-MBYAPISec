@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ImageService {
@@ -27,8 +28,13 @@ public class ImageService {
     private final StorageProperties storageProperties;
     private final MapperService mapperService;
 
-    public ImageService(UserRepository userRepository, ImageRepository imageRepository, CustomAuthenticationProviderService customAuthenticationProviderService, StorageService storageService,
-                        YardRepository yardRepository, StorageProperties storageProperties, MapperService mapperService) {
+    public ImageService(UserRepository userRepository,
+                        ImageRepository imageRepository,
+                        CustomAuthenticationProviderService customAuthenticationProviderService,
+                        StorageService storageService,
+                        YardRepository yardRepository,
+                        StorageProperties storageProperties,
+                        MapperService mapperService) {
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
         this.customAuthenticationProviderService = customAuthenticationProviderService;
@@ -57,14 +63,14 @@ public class ImageService {
             image.setOwnerId(user.getId());
             image.setPath(storageProperties.location() + user.getId() + "/" + multipartFile.getOriginalFilename());
             imageRepository.save(image); // TODO: This should return to the controller
-        } else throw new RuntimeException("StorageService:postImageForEntity says - User is not in the DB");
+        } else throw new NoSuchElementException("StorageService:postImageForEntity says - User is not in the DB");
     }
 
     public List<ImageDto> getImageDataForEntity(String entity, Long entityId) {
         return switch (entity.toLowerCase()) {
             case "yard" -> getImageDataForYard(entityId);
             case "plant", "animal" -> new ArrayList<>();
-            default -> throw new RuntimeException("StorageService:getAllForEntity says - entity is not valid");
+            default -> throw new EntityNotFoundException("StorageService:getAllForEntity says - entity is not valid");
         };
     }
 
@@ -78,7 +84,7 @@ public class ImageService {
 
     public Resource getImage(Long imageId) throws MalformedURLException {
         User user = userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName());
-        Image image = imageRepository.findById(imageId).orElseThrow(() -> new RuntimeException("No image found"));
+        Image image = imageRepository.findById(imageId).orElseThrow(() -> new NoSuchElementException("No image found"));
         if (user.getId().equals(image.getOwnerId())) {
             return storageService.retrieve(image.getFileName(), image.getOwnerId());
         } else throw new SecurityException("user and image owner dont match up");

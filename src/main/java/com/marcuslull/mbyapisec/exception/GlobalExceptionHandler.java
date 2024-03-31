@@ -14,6 +14,9 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // InvalidPathException
+    // MalformedURLException
+
     @ExceptionHandler(UserRegistrationException.class)
     public ResponseEntity<String> handleUserRegistrationExceptions(Exception exception) {
         // UserRegistrationException - extends RuntimeException - Custom Exception to handle any user registration issues

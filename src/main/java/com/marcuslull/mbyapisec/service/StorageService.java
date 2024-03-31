@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -22,7 +23,7 @@ public class StorageService {
     public StorageService(StorageProperties storageProperties) {
         if (!storageProperties.location().trim().isEmpty()) {
             this.rootLocation = Paths.get(storageProperties.location());
-        } else throw new RuntimeException("StorageService:Constructor says - File cannot be empty");
+        } else throw new IllegalArgumentException("StorageService:Constructor says - File cannot be empty");
     }
 
     public void store(Long userId, MultipartFile multipartFile) throws IOException {
@@ -49,6 +50,6 @@ public class StorageService {
             if (resource.isReadable()) {
                 return resource;
             } else throw new RuntimeException("StorageService:retrieve says - file is corrupt: " + file);
-        } else throw new RuntimeException("StorageService:retrieve says - file does not exist: " + file);
+        } else throw new NoSuchElementException("StorageService:retrieve says - file does not exist: " + file);
     }
 }

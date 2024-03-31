@@ -3,6 +3,7 @@ package com.marcuslull.mbyapisec.service;
 import com.marcuslull.mbyapisec.model.dto.*;
 import com.marcuslull.mbyapisec.model.entity.*;
 import com.marcuslull.mbyapisec.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -41,7 +42,7 @@ public class MapperService {
             case "Animal", "AnimalDto" -> (T) mapAnimal(source);
             case "Note", "NoteDto" -> (T) mapNote(source);
             case "Image", "ImageDto" -> (T) mapImage(source);
-            default -> throw new RuntimeException("Mapper cannot match object passed with entity or dto");
+            default -> throw new EntityNotFoundException("Mapper cannot match object passed with entity or dto");
         };
     }
 
@@ -219,15 +220,15 @@ public class MapperService {
             yard.setYardSubType(yardDto.getYardSubType());
             if (yardDto.getPlantIds() != null) {
                 yard.setPlants(yardDto.getPlantIds().stream().map(plant -> plantRepository.findById(plant)
-                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
+                        .get()).collect(Collectors.toList()));
             }
             if (yardDto.getAnimalIds() != null) {
                 yard.setAnimals(yardDto.getAnimalIds().stream().map(animal -> animalRepository.findById(animal)
-                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
+                        .get()).collect(Collectors.toList()));
             }
             if (yardDto.getNoteIds() != null) {
                 yard.setNotes(yardDto.getNoteIds().stream().map(note -> noteRepository.findById(note)
-                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
+                        .get()).collect(Collectors.toList()));
             }
             User user = userRepository.findUserByEmail(yardDto.getUserEmail());
             if (user != null) {
