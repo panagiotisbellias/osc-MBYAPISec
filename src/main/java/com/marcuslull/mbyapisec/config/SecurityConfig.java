@@ -18,10 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -40,7 +37,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception { // Caught in GlobalException Handler
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override
@@ -76,7 +73,7 @@ public class SecurityConfig {
         if (rsaKeyProperties.publicKey() != null) {
             return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build();
         }
-        throw new RuntimeException("jwtDecoder says: Missing RSA key");
+        throw new JwtException("jwtDecoder says: Missing RSA key");
     }
 
     @Bean
@@ -86,6 +83,6 @@ public class SecurityConfig {
             JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
             return new NimbusJwtEncoder(jwks);
         }
-        throw new RuntimeException("jwtEncoder says: Missing RSA key");
+        throw new JwtException("jwtEncoder says: Missing RSA key");
     }
 }

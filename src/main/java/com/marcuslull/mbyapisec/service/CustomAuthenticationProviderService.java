@@ -1,6 +1,7 @@
 package com.marcuslull.mbyapisec.service;
 
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,7 +46,7 @@ public class CustomAuthenticationProviderService implements AuthenticationProvid
         if (authentication != null) {
             return authentication.getName();
         } else
-            throw new RuntimeException("CustomAuthenticationProviderService:getAuthenticatedName() says: authentication " +
+            throw new AuthenticationServiceException("CustomAuthenticationProviderService:getAuthenticatedName() says: authentication " +
                     "is null - No authentication info is available");
     }
 }

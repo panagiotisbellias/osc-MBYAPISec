@@ -16,7 +16,6 @@ public class AuthController {
 
     @PostMapping("/token")
     public String token(Authentication authentication) {
-        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return tokenService.generateToken(authentication);
     }
 }

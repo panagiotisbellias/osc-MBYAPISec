@@ -18,25 +18,21 @@ public class NoteController {
 
     @GetMapping("/api/yard/{id}/notes")
     public ResponseEntity<List<NoteDto>> getNotesForYard(@PathVariable Long id) {
-        // NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(noteService.getNotesForYard(id));
     }
 
     @GetMapping("/api/note/{id}")
     public ResponseEntity<NoteDto> getNote(@PathVariable Long id) {
-        // NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(noteService.getNote(id));
     }
 
     @PostMapping("/api/notes")
     public ResponseEntity<NoteDto> postNote(@RequestBody NoteDto noteDto) {
-        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return ResponseEntity.ok(noteService.postNote(noteDto));
     }
 
     @PutMapping("/api/note/{id}")
     public ResponseEntity<NoteDto> putNote(@PathVariable Long id, @RequestBody NoteDto noteDto) {
-        // HttpMessageNotReadableException MethodArgumentTypeMismatchException NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(noteService.putNote(id, noteDto));
     }
 

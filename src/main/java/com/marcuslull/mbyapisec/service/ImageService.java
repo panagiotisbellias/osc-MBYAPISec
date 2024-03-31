@@ -7,6 +7,7 @@ import com.marcuslull.mbyapisec.model.record.StorageProperties;
 import com.marcuslull.mbyapisec.repository.ImageRepository;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import com.marcuslull.mbyapisec.repository.YardRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +42,7 @@ public class ImageService {
         switch (entity.toLowerCase()) {
             case "yard" -> postImageFileForYard(entityId, multipartFile);
             case "plant", "animal" -> new ImageDto();
-            default -> throw new RuntimeException("ImageService:postImage says - entity is not valid");
+            default -> throw new EntityNotFoundException("ImageService:postImage says - entity is not valid");
         }
     }
 
