@@ -20,7 +20,6 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> registrationInfo) {
-        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         // This is disabled until I get some email verification
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 //        registerService.register(registrationInfo);

@@ -23,19 +23,16 @@ public class YardController {
 
     @GetMapping("/api/yard/{id}")
     public ResponseEntity<YardDto> getYard(@PathVariable Long id) {
-        // NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(yardService.getYard(id));
     }
 
     @PostMapping("/api/yards")
     public ResponseEntity<YardDto> postYards(@RequestBody YardDto yardDto) {
-        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return ResponseEntity.ok(yardService.postYard(yardDto));
     }
 
     @PutMapping("/api/yard/{id}")
     public ResponseEntity<YardDto> putYard(@PathVariable Long id, @RequestBody YardDto yardDto) {
-        // HttpMessageNotReadableException MethodArgumentConversionException NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(yardService.putYard(id, yardDto));
     }
 

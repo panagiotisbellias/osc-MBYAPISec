@@ -23,20 +23,17 @@ public class AnimalController {
 
     @GetMapping("/api/animal/{id}")
     public ResponseEntity<AnimalDto> getAnimal(@PathVariable Long id) {
-        // NumberFormatException caught in GlobalExceptionHandler
         AnimalDto animalDto = animalService.getAnimal(id);
         return ResponseEntity.ok(animalDto);
     }
 
     @PostMapping("/api/animals")
     public ResponseEntity<AnimalDto> postAnimals(@RequestBody AnimalDto animalDto) {
-        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return ResponseEntity.ok(animalService.postAnimal(animalDto));
     }
 
     @DeleteMapping("/api/animal/{id}")
     public ResponseEntity<String> deleteAnimal(@PathVariable Long id) {
-        // NumberFormatException caught in GlobalExceptionHandler
         animalService.deleteAnimal(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,11 +1,9 @@
 package com.marcuslull.mbyapisec.service;
 
-import com.marcuslull.mbyapisec.model.dto.AnimalDto;
-import com.marcuslull.mbyapisec.model.dto.NoteDto;
-import com.marcuslull.mbyapisec.model.dto.PlantDto;
-import com.marcuslull.mbyapisec.model.dto.YardDto;
+import com.marcuslull.mbyapisec.model.dto.*;
 import com.marcuslull.mbyapisec.model.entity.*;
 import com.marcuslull.mbyapisec.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -43,8 +41,49 @@ public class MapperService {
             case "Plant", "PlantDto" -> (T) mapPlant(source);
             case "Animal", "AnimalDto" -> (T) mapAnimal(source);
             case "Note", "NoteDto" -> (T) mapNote(source);
-            default -> throw new RuntimeException("Mapper cannot match object passed with entity or dto");
+            case "Image", "ImageDto" -> (T) mapImage(source);
+            default -> throw new EntityNotFoundException("Mapper cannot match object passed with entity or dto");
         };
+    }
+
+    private Object mapImage(Object source) {
+        if (source instanceof Image image) {
+            ImageDto imageDto = new ImageDto();
+            imageDto.setId(image.getId());
+            imageDto.setCreated(image.getCreated());
+            imageDto.setUpdated(image.getUpdated());
+            imageDto.setOwnerId(image.getOwnerId());
+            imageDto.setFileName(image.getFileName());
+            imageDto.setFileSize(image.getFileSize());
+            imageDto.setPath(image.getPath());
+            imageDto.setYardId(image.getYard().getId());
+            return imageDto;
+        } else {
+            ImageDto imageDto = (ImageDto) source;
+            Image image = new Image();
+            image.setId(imageDto.getId());
+            image.setCreated(imageDto.getCreated());
+            image.setUpdated(imageDto.getUpdated());
+            image.setFileName(imageDto.getFileName());
+            image.setFileSize(imageDto.getFileSize());
+            image.setPath(imageDto.getPath());
+
+            if (imageDto.getOwnerId() == null) {
+                Long id = userRepository.findUserByEmail(customAuthenticationProviderService
+                                .getAuthenticatedName())
+                        .getId();
+                image.setOwnerId(id);
+            } else image.setOwnerId(imageDto.getOwnerId());
+
+            if (imageDto.getYardId() != null) {
+                Yard yard = yardRepository.findYardByIdAndUserEmail(imageDto.getYardId(),
+                        customAuthenticationProviderService.getAuthenticatedName());
+                if (yard != null) {
+                    image.setYard(yard);
+                } else throw new NoSuchElementException();
+            }
+            return image;
+        }
     }
 
     private Object mapNote(Object source) {
@@ -181,15 +220,15 @@ public class MapperService {
             yard.setYardSubType(yardDto.getYardSubType());
             if (yardDto.getPlantIds() != null) {
                 yard.setPlants(yardDto.getPlantIds().stream().map(plant -> plantRepository.findById(plant)
-                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
+                        .get()).collect(Collectors.toList()));
             }
             if (yardDto.getAnimalIds() != null) {
                 yard.setAnimals(yardDto.getAnimalIds().stream().map(animal -> animalRepository.findById(animal)
-                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
+                        .get()).collect(Collectors.toList()));
             }
             if (yardDto.getNoteIds() != null) {
                 yard.setNotes(yardDto.getNoteIds().stream().map(note -> noteRepository.findById(note)
-                        .get()).collect(Collectors.toList())); // NoSuchElementException caught in the GlobalExceptionHandler
+                        .get()).collect(Collectors.toList()));
             }
             User user = userRepository.findUserByEmail(yardDto.getUserEmail());
             if (user != null) {

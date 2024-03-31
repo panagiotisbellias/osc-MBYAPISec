@@ -23,13 +23,11 @@ public class PlantController {
 
     @GetMapping("/api/plant/{id}")
     public ResponseEntity<PlantDto> getPlant(@PathVariable Long id) {
-        // NumberFormatException caught in GlobalExceptionHandler
         return ResponseEntity.ok(plantService.getPlant(id));
     }
 
     @PostMapping("/api/plants")
     public ResponseEntity<PlantDto> postPlants(@RequestBody PlantDto plantDto) {
-        // HttpMessageNotReadableException MethodArgumentTypeMismatchException caught in GlobalExceptionHandler
         return ResponseEntity.ok(plantService.postPlant(plantDto));
     }
 

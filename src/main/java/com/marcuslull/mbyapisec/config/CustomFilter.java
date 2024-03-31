@@ -11,7 +11,7 @@ import java.io.IOException;
 public class CustomFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException { // caught in GlobalExceptionHandler
+            throws ServletException, IOException {
         // Doing some logging here eventually
         filterChain.doFilter(request, response);
     }

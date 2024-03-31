@@ -1,11 +1,12 @@
 package com.marcuslull.mbyapisec.service;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,45 +20,49 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CustomAuthenticationProviderServiceTest {
 
+    private static MockedStatic<SecurityContextHolder> mockedStatic;
     @Mock
     private UserService userService;
-
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private Authentication authentication;
-
     @Mock
     private GrantedAuthority grantedAuthority;
-
     @Mock
     private Object object;
-
     @Mock
     private SecurityContext securityContext;
-
     @InjectMocks
     private CustomAuthenticationProviderService customAuthenticationProviderService;
 
     @BeforeAll
     static void setUp() {
-        mockStatic(SecurityContextHolder.class);
+        mockedStatic = mockStatic(SecurityContextHolder.class);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        if (mockedStatic.isClosed()) {
+            mockedStatic.close();
+        }
     }
 
     @Test
     void authenticateSuccess() {
         // Arrange
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken("name","password", List.of(grantedAuthority));
+                new UsernamePasswordAuthenticationToken("name", "password", List.of(grantedAuthority));
         UserDetails userDetails = new User("name", "password", List.of(grantedAuthority));
         when(authentication.getName()).thenReturn("name");
         when(authentication.getCredentials()).thenReturn(object);
@@ -88,7 +93,7 @@ class CustomAuthenticationProviderServiceTest {
     void authenticateFailurePassword() {
         // Arrange
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken("name","password", List.of(grantedAuthority));
+                new UsernamePasswordAuthenticationToken("name", "password", List.of(grantedAuthority));
         UserDetails userDetails = new User("name", "password", List.of(grantedAuthority));
         when(authentication.getName()).thenReturn("name");
         when(authentication.getCredentials()).thenReturn(object);
