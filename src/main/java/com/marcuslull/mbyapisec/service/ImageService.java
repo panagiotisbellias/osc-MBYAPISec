@@ -1,5 +1,6 @@
 package com.marcuslull.mbyapisec.service;
 
+import com.marcuslull.mbyapisec.exception.ImageQuotaExceededException;
 import com.marcuslull.mbyapisec.model.dto.ImageDto;
 import com.marcuslull.mbyapisec.model.entity.Image;
 import com.marcuslull.mbyapisec.model.entity.User;
@@ -28,6 +29,8 @@ public class ImageService {
     private final StorageProperties storageProperties;
     private final MapperService mapperService;
 
+    private final Integer IMAGE_UPLOAD_QUOTA = 20;
+
     public ImageService(UserRepository userRepository,
                         ImageRepository imageRepository,
                         CustomAuthenticationProviderService customAuthenticationProviderService,
@@ -45,11 +48,20 @@ public class ImageService {
     }
 
     public void postImage(String entity, Long entityId, MultipartFile multipartFile) throws IOException {
-        switch (entity.toLowerCase()) {
-            case "yard" -> postImageFileForYard(entityId, multipartFile);
-            case "plant", "animal" -> new ImageDto();
-            default -> throw new EntityNotFoundException("ImageService:postImage says - entity is not valid");
+        if (userOverQuota()) {
+            throw new ImageQuotaExceededException("Your total image upload count has reached the maximum allowed");
+        } else {
+            switch (entity.toLowerCase()) {
+                case "yard" -> postImageFileForYard(entityId, multipartFile);
+                case "plant", "animal" -> new ImageDto();
+                default -> throw new EntityNotFoundException("ImageService:postImage says - entity is not valid");
+            }
         }
+    }
+
+    private boolean userOverQuota() {
+        return imageRepository.countByOwnerId(userRepository.findUserByEmail(customAuthenticationProviderService
+                .getAuthenticatedName()).getId()) >= IMAGE_UPLOAD_QUOTA;
     }
 
     private void postImageFileForYard(Long entityId, MultipartFile multipartFile) throws IOException {

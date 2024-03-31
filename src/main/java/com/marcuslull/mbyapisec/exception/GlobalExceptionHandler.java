@@ -14,9 +14,6 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // InvalidPathException
-    // MalformedURLException
-
     @ExceptionHandler(UserRegistrationException.class)
     public ResponseEntity<String> handleUserRegistrationExceptions(Exception exception) {
         // UserRegistrationException - extends RuntimeException - Custom Exception to handle any user registration issues
@@ -47,6 +44,17 @@ public class GlobalExceptionHandler {
 
         System.out.println(exception);
         return new ResponseEntity<>("The path variable or request body is not formatted correctly", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ImageQuotaExceededException.class)
+    public ResponseEntity<String> handleImageQuotaExceededException(Exception exception) {
+        // ImageQuotaExceededException - extends RuntimeException - Custom exception to indicate the user has reached
+        // the max allowable image uploads.
+
+        // TODO: Logging the exception message
+
+        System.out.println(exception);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
     }
 
 
