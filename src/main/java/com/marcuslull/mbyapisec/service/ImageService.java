@@ -11,6 +11,7 @@ import com.marcuslull.mbyapisec.repository.YardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class ImageService {
@@ -100,5 +102,15 @@ public class ImageService {
         if (user.getId().equals(image.getOwnerId())) {
             return storageService.retrieve(image.getFileName(), image.getOwnerId());
         } else throw new SecurityException("user and image owner dont match up");
+    }
+
+    @Transactional
+    public void deleteImage(Long imageId) throws IOException {
+        User user = userRepository.findUserByEmail(customAuthenticationProviderService.getAuthenticatedName());
+        Image image = imageRepository.findById(imageId).orElseThrow();
+        if (Objects.equals(image.getOwnerId(), user.getId())) {
+            imageRepository.deleteImageByIdAndOwnerId(imageId, user.getId());
+            storageService.deleteImage(image.getPath());
+        }
     }
 }

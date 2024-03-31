@@ -12,4 +12,6 @@ public interface ImageRepository extends CrudRepository<Image, Long> {
 
     @Query("select count(i) from Image i where i.ownerId = ?1")
     long countByOwnerId(@NonNull Long ownerId);
+
+    void deleteImageByIdAndOwnerId(Long id, Long ownerId);
 }

@@ -196,4 +196,26 @@ class ImageServiceTest {
         // act & assert
         assertThrows(SecurityException.class, () -> imageService.getImage(1L));
     }
+
+    @Test
+    void deleteImageSuccess() throws IOException {
+        // Arrange
+        User user = new User();
+        user.setId(1L);
+        Image image = new Image();
+        image.setOwnerId(1L);
+        image.setPath("path");
+        when(customAuthenticationProviderService.getAuthenticatedName()).thenReturn("owner");
+        when(userRepository.findUserByEmail("owner")).thenReturn(user);
+        when(imageRepository.findById(1L)).thenReturn(Optional.of(image));
+        doNothing().when(imageRepository).deleteImageByIdAndOwnerId(1L, 1L);
+        doNothing().when(storageService).deleteImage(image.getPath());
+
+        // Act
+        imageService.deleteImage(1L);
+
+        // Assert
+        verify(imageRepository, atLeastOnce()).deleteImageByIdAndOwnerId(1L, 1L);
+        verify(storageService, atLeastOnce()).deleteImage(image.getPath());
+    }
 }

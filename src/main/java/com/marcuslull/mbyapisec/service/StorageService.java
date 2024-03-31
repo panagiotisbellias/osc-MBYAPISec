@@ -52,4 +52,9 @@ public class StorageService {
             } else throw new RuntimeException("StorageService:retrieve says - file is corrupt: " + file);
         } else throw new NoSuchElementException("StorageService:retrieve says - file does not exist: " + file);
     }
+
+    public void deleteImage(String imagePath) throws IOException {
+        Path path = Paths.get(imagePath).normalize().toAbsolutePath();
+        Files.deleteIfExists(path);
+    }
 }
