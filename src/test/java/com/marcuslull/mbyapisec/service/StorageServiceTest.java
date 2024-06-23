@@ -4,13 +4,19 @@ import com.marcuslull.mbyapisec.model.record.StorageProperties;
 import com.marcuslull.mbyapisec.repository.UserRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -25,12 +31,6 @@ class StorageServiceTest {
     private UserRepository userRepository;
     @Mock
     private Path rootLocation;
-    @Mock
-    private StorageProperties storageProperties;
-    @Mock
-    private MultipartFile multipartFile;
-    @InjectMocks
-    private StorageService storageService;
 
     @BeforeAll
     static void beforeAll() {
@@ -44,33 +44,64 @@ class StorageServiceTest {
         }
     }
 
-    //    @Test
-    void storeSuccess() {
-        // arrange
+    @Test
+    void testStoreIsSuccessful() throws IOException {
 
-        // act
+        StorageProperties storageProperties = Mockito.mock(StorageProperties.class);
+        Mockito.when(storageProperties.location()).thenReturn("location");
+        StorageService storageService = new StorageService(storageProperties);
 
-        // assert
-        // TODO: Implement this test - There are so many Static methods and runtime pathing - Tough one!
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+        InputStream inputStream = Mockito.mock(InputStream.class);
+
+        Mockito.when(multipartFile.getOriginalFilename()).thenReturn("original-filename.txt");
+        Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+        storageService.store(0L, multipartFile);
+
+        Mockito.verify(multipartFile).getOriginalFilename();
+        Mockito.verify(multipartFile).getInputStream();
+
     }
 
-    //    @Test
-    void storeFailFileSystem() {
-        // arrange
+    @Test
+    void testStoreFileExists() throws IOException {
 
-        // act
+        StorageProperties storageProperties = Mockito.mock(StorageProperties.class);
+        Mockito.when(storageProperties.location()).thenReturn("location");
+        StorageService storageService = new StorageService(storageProperties);
 
-        // assert
-        // TODO: Implement this test - There are so many Static methods and runtime pathing - Tough one!
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+        InputStream inputStream = Mockito.mock(InputStream.class);
+
+        Mockito.when(multipartFile.getOriginalFilename()).thenReturn("original-filename.txt");
+        Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+        storageService.store(0L, multipartFile);
+
+        Mockito.verify(multipartFile).getOriginalFilename();
+        Mockito.verify(multipartFile).getInputStream();
+
     }
 
-    //    @Test
-    void storeFailInvalidFile() {
-        // arrange
+    @Test
+    void testRetrieveIsSuccessful() throws MalformedURLException {
 
-        // act
+        StorageProperties storageProperties = Mockito.mock(StorageProperties.class);
+        Mockito.when(storageProperties.location()).thenReturn("location");
+        StorageService storageService = new StorageService(storageProperties);
 
-        // assert
-        // TODO: Implement this test - There are so many Static methods and runtime pathing - Tough one!
+        Resource resource = storageService.retrieve("original-filename.txt", 0L);
+
     }
+
+    @Test
+    void testDeleteImage() throws IOException {
+
+        StorageProperties storageProperties = Mockito.mock(StorageProperties.class);
+        Mockito.when(storageProperties.location()).thenReturn("location");
+
+        StorageService storageService = new StorageService(storageProperties);
+        storageService.deleteImage("image path");
+
+    }
+
 }
